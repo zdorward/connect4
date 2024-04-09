@@ -1,8 +1,28 @@
 use rand::Rng; // For bot moves
 use std::io;
 
+use super::Game;
+
 const ROWS: usize = 6;
 const COLS: usize = 7;
+
+struct Connect4 {
+    rows: usize,
+    columns: usize,
+}
+
+impl Game for Connect4 {
+    fn drop_piece(board: &mut Vec<Vec<char>>, col: usize, piece: char) -> bool {
+        for row in board.iter_mut().rev() {
+            if row[col] == '.' {
+                row[col] = piece;
+                return true;
+            }
+        }
+        println!("Column is full, try a different one.");
+        false
+    }
+}
 
 pub fn main() {
     let mut board: Vec<Vec<char>> = vec![vec!['.'; COLS]; ROWS];
