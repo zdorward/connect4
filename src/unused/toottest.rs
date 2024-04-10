@@ -1,10 +1,12 @@
 use yew::prelude::*;
 use yew::{function_component, html};
+use rand::prelude::*;
+// use std::cmp::Ordering;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)] 
 enum Cell {
     Empty,
-    X,
+    T,
     O,
 }
 
@@ -13,16 +15,19 @@ enum GameState {
     WonBy(Cell),
 }
 
-#[function_component(Connect4BoardEric)]
+#[function_component(TootBoard)]
 pub fn connect_4_board() -> Html {
-    let board = use_state(|| vec![vec![Cell::Empty; 6]; 7]);
-    let player_turn = use_state(|| Cell::X);
+    let num_rows = 6; // Define the number of rows
+    let num_cols = 7; // Define the number of columns
+
+    let board = use_state(|| vec![vec![Cell::Empty; num_rows]; num_cols]); // Use variables for board size
+    let player_turn = use_state(|| Cell::T); // Changed initial player to "T"
     let game_state = use_state(|| GameState::Ongoing);
 
     html! {
         <>
             <div class="board">
-                { for (0..7).map(|x| {
+                { for (0..num_cols).map(|x| {
                     let board = board.clone();
                     let player_turn = player_turn.clone();
                     let game_state = game_state.clone();
@@ -33,9 +38,9 @@ pub fn connect_4_board() -> Html {
                         Callback::from(move |_| {
                             if matches!(*game_state, GameState::Ongoing) {
                                 let mut new_board = (*board).clone();
-                                let column_filled = new_board[x].iter().all(|cell| matches!(cell, Cell::O) || matches!(cell, Cell::X));
+                                let column_filled = new_board[x].iter().all(|cell| matches!(cell, Cell::O) || matches!(cell, Cell::T)); // Changed check to "T"
                                 if !column_filled {
-                                    for y in (0..6).rev() {
+                                    for y in (0..num_rows).rev() {
                                         if matches!(new_board[x][y], Cell::Empty) {
                                             new_board[x][y] = (*player_turn).clone();
                                             
@@ -45,8 +50,8 @@ pub fn connect_4_board() -> Html {
                                             }
                                             
                                             player_turn.set(match *player_turn {
-                                                Cell::X => Cell::O,
-                                                Cell::O => Cell::X,
+                                                Cell::T => Cell::O, // Changed player turn
+                                                Cell::O => Cell::T, // Changed player turn
                                                 _ => unreachable!(),
                                             });
                                             break;
@@ -59,10 +64,10 @@ pub fn connect_4_board() -> Html {
                     };
                     html! {
                         <div class="column" {onclick}>
-                            { for (0..6).map(|y| {
+                            { for (0..num_rows).map(|y| {
                                 let cell = board[x][y].clone();
                                 let symbol = match cell {
-                                    Cell::X => "X",
+                                    Cell::T => "T", // Changed symbol from "X" to "T"
                                     Cell::O => "O",
                                     Cell::Empty => "",
                                 };
@@ -79,7 +84,7 @@ pub fn connect_4_board() -> Html {
             <p>
                 {
                     match *game_state {
-                        GameState::WonBy(Cell::X) => "Player X won!".to_string(),
+                        GameState::WonBy(Cell::T) => "Player T won!".to_string(), // Changed player symbol
                         GameState::WonBy(Cell::O) => "Player O won!".to_string(),
                         _ => "".to_string(),
                     }
@@ -94,11 +99,14 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
     let rows = board.len();
     let cols = board[0].len();
 
+    // Check for "TOOT" for player 1 and "OTTO" for player 2
+    let win_sequences = [vec![Cell::T, Cell::O, Cell::O, Cell::T], vec![Cell::O, Cell::T, Cell::T, Cell::O]];
+
     // Check horizontal lines
     for y in 0..rows {
         for x in 0..cols - 3 {
-            if let Some(cell) = board[y][x].clone().into_option() {
-                if board[y][x + 1] == cell && board[y][x + 2] == cell && board[y][x + 3] == cell {
+            for sequence in win_sequences.iter() {
+                if (0..4).all(|i| board[y][x + i] == sequence[i]) {
                     return true;
                 }
             }
@@ -108,24 +116,24 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
     // Check vertical lines
     for x in 0..cols {
         for y in 0..rows - 3 {
-            if let Some(cell) = board[y][x].clone().into_option() {
-                if board[y + 1][x] == cell && board[y + 2][x] == cell && board[y + 3][x] == cell {
+            for sequence in win_sequences.iter() {
+                if (0..4).all(|i| board[y + i][x] == sequence[i]) {
                     return true;
                 }
             }
         }
     }
 
-    // Check diagonal (down-right and up-right)
+    // Check diagonal lines
     for y in 0..rows - 3 {
         for x in 0..cols - 3 {
-            if let Some(cell) = board[y][x].clone().into_option() {
+            for sequence in win_sequences.iter() {
                 // Down-right
-                if board[y + 1][x + 1] == cell && board[y + 2][x + 2] == cell && board[y + 3][x + 3] == cell {
+                if (0..4).all(|i| board[y + i][x + i] == sequence[i]) {
                     return true;
                 }
-                // Up-right (for diagonals going the other way, we start from the bottom)
-                if y >= 3 && board[y - 1][x + 1] == cell && board[y - 2][x + 2] == cell && board[y - 3][x + 3] == cell {
+                // Up-right
+                if y >= 3 && (0..4).all(|i| board[y - i][x + i] == sequence[i]) {
                     return true;
                 }
             }
@@ -133,14 +141,4 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
     }
 
     false
-}
-
-// Helper to convert Cell to Option<Cell> for easier checking
-impl Cell {
-    fn into_option(self) -> Option<Self> {
-        match self {
-            Cell::Empty => None,
-            _ => Some(self),
-        }
-    }
 }

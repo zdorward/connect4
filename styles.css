@@ -4,8 +4,8 @@
 
 body {
   display: flex;
-  align-items: center; /* Center vertically */
-  flex-direction: column; /* Stack items vertically */
+  align-items: center;
+  flex-direction: column;
 }
 
 .board {
@@ -20,4 +20,7 @@ body {
   height: 50px; /* Adjust height as needed */
   background-color: white; /* Change cell background color */
   border: 1px solid black; /* Add border to cells */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
