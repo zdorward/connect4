@@ -1,17 +1,18 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 body {
   display: flex;
-  justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
-  margin: 0; /* Remove default margin */
+  flex-direction: column; /* Stack items vertically */
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(7, 50px); /* Adjust width as needed */
-  grid-template-rows: repeat(6, 50px); /* Adjust height as needed */
-  gap: 2px; /* Adjust gap between cells */
-  /* background-color: blue; Change board background color */
-  padding: 5px; /* Adjust padding as needed */
+  grid-template-columns: repeat(7, 50px);
+  grid-template-rows: repeat(6, 50px);
+  padding: 5px;
 }
 
 .cell {

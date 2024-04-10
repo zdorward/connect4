@@ -1,12 +1,16 @@
-<!DOCTYPE html><html lang="en"><head> 
-<link rel="preload" href="/connect4-c533bc62a630d470_bg.wasm" crossorigin="anonymous" integrity="sha384-ORE87hG5beNw2g2ftwMikM6Ivcde1hbZK19purJjOXin4-NUfefqbcmBbH2qd7EX" as="fetch" type="application/wasm">
-<link rel="modulepreload" href="/connect4-c533bc62a630d470.js" crossorigin="anonymous" integrity="sha384-u_w0LRCLJExBUhW6YU1k_SZ57eahgkAUd2AUbsraK-VHmqcVGF2U5Hlot5GTPvo9"></head>
-  <body>
-
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Connect 4</title>
+    <link rel="stylesheet" href="/styles-4bd29f48f74a9b23.css" integrity="sha384-Sh2dlZwa35OJbJgGgxV2CRN0goA8QMuieZjmW3BOHudDKCjFi18IBFOcjpQDaXfT">
+  
+<link rel="preload" href="/connect4-6b938efad45270d0_bg.wasm" crossorigin="anonymous" integrity="sha384-hoLsqYe47nL9d2MQDHzlbKCT7pP8SrOh8ZiYJGfipM3sj3IN3Kcswt5fkZf_ea2U" as="fetch" type="application/wasm">
+<link rel="modulepreload" href="/connect4-6b938efad45270d0.js" crossorigin="anonymous" integrity="sha384-CdxnXAbYcMQBA6lhpmSd9tdGVrTuY27kTjdrTvwAUC7kH4Tfie14P-U_WSUhsPso"></head>
+  <!-- <body class="w-screen h-screen container mx-auto my-10"></body> -->
+<body>
 
 <script type="module">
-import init, * as bindings from '/connect4-c533bc62a630d470.js';
-init('/connect4-c533bc62a630d470_bg.wasm');
+import init, * as bindings from '/connect4-6b938efad45270d0.js';
+init('/connect4-6b938efad45270d0_bg.wasm');
 window.wasmBindings = bindings;
 
 </script><script>"use strict";
