@@ -19,6 +19,7 @@ pub fn App() -> Html {
 
             <TootAndOttoRules/>
             <TootBoard/>
+            <TootAndOttoRules/>
         </>
     }
 }

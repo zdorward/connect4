@@ -1,7 +1,5 @@
 use yew::prelude::*;
 use yew::{function_component, html};
-use rand::prelude::*;
-// use std::cmp::Ordering;
 
 #[derive(Clone, PartialEq)] 
 enum Cell {
