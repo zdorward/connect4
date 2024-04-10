@@ -1,12 +1,15 @@
 use yew::prelude::*;
 use crate::components::rules::{TootAndOttoRules, Connect4Rules};
 use crate::components::board::Board;
-use crate::components::game_types::{GameVersion, GameVersion::Connect4, GameVersion::TootOtto};
+// use crate::components::connect4::Connect4Board;
+use crate::components::game_types::{GameVersion, GameVersion::Connect4, GameVersion::TootOtto, Difficulty};
 
 #[function_component]
 pub fn App() -> Html {
     let game_version = use_state(|| Connect4);
     let restart_counter = use_state(|| 0); // State to trigger board restarts
+
+    let difficulty = use_state(|| Difficulty::Easy); // Adding a state for the difficulty
 
     let toggle_version = {
         let game_version = game_version.clone();
@@ -25,6 +28,17 @@ pub fn App() -> Html {
             restart_counter.set(*restart_counter + 1); // Increment the counter to trigger a re-render
         })
     };
+
+    // let change_difficulty = {
+    //     let difficulty = difficulty.clone();
+    //     Callback::from(move |_| {
+    //         difficulty.set(if *difficulty == Difficulty::Easy {
+    //             Difficulty::Hard
+    //         } else {
+    //             Difficulty::Easy
+    //         });
+    //     })
+    // };
 
     let render_game = |version: &GameVersion| {
         match version {

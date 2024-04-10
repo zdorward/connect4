@@ -9,3 +9,5 @@ edition = "2021"
 yew = { version = "0.20", features = ["csr"] }
 rand = "0.8.5"
 getrandom = { version = "0.2.14", features = ["js"] }
+log = "0.4"
+web-sys = "0.3"

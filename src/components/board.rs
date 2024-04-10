@@ -1,4 +1,7 @@
 use yew::prelude::*;
+use rand::{thread_rng, Rng};
+use web_sys::console;
+
 
 use crate::components::game_types::{BoardProps, Cell, GameVersion, GameState}; 
 
@@ -61,21 +64,27 @@ fn create_column(
                             new_board[x][y] = (*player_turn).clone();
                             
                             if check_for_win(&new_board, &game_version) {
+                                board.set(new_board.clone());
                                 game_state.set(GameState::WonBy((*player_turn).clone()));
-                                break;
+                            } else {
+                                // player_turn.set(match (&*player_turn, &*game_version) {
+                                //     (Cell::X, GameVersion::Connect4) | (Cell::T, GameVersion::TootOtto) => Cell::O,
+                                //     (Cell::O, GameVersion::Connect4) => Cell::X,
+                                //     (Cell::O, GameVersion::TootOtto) => Cell::T,
+                                //     _ => unreachable!(),
+                                // });
+
+                                // // Update the board with the player's move
+                                // board.set(new_board.clone());
+
+                                // Make a computer move
+                                if let Some(computer_board) = make_computer_move(&new_board, &player_turn, &game_state, &game_version) {
+                                    board.set(computer_board);
+                                }
                             }
-                            
-                            player_turn.set(match (&*player_turn, &*game_version) {
-                                (Cell::X, GameVersion::Connect4) | (Cell::T, GameVersion::TootOtto) => Cell::O,
-                                (Cell::O, GameVersion::Connect4) => Cell::X,
-                                (Cell::O, GameVersion::TootOtto) => Cell::T,
-                                _ => unreachable!(),
-                            });
-                            
                             break;
                         }
                     }
-                    board.set(new_board);
                 }
             }
         })
@@ -101,8 +110,9 @@ fn create_column(
 }
 
 fn check_for_win(board: &Vec<Vec<Cell>>, game_version: &GameVersion) -> bool {
+
     let rows = board.len();
-    let cols = if rows > 0 { board[0].len() } else { 0 };
+    let cols = board[0].len();
 
     let win_sequences = match game_version {
         GameVersion::Connect4 => vec![vec![Cell::X, Cell::X, Cell::X, Cell::X], vec![Cell::O, Cell::O, Cell::O, Cell::O]],
@@ -148,4 +158,44 @@ fn check_for_win(board: &Vec<Vec<Cell>>, game_version: &GameVersion) -> bool {
     }
 
     false
+}
+
+fn make_computer_move(
+    board: &Vec<Vec<Cell>>,
+    player_turn: &Cell,
+    game_state: &GameState,
+    game_version: &GameVersion,
+) -> Option<Vec<Vec<Cell>>> {
+    if matches!(*game_state, GameState::Ongoing) {
+        let mut rng = thread_rng();
+        let cols = board[0].len();
+        let rows = board.len();
+
+        // Determine the computer's cell type based on the current player's type and game version
+        let computer_cell = match game_version {
+            GameVersion::Connect4 => match player_turn {
+                Cell::X => Cell::O,
+                Cell::O => Cell::X,
+                _ => unreachable!(),
+            },
+            GameVersion::TootOtto => {
+                // In TootOtto mode, randomly choose between T and O for the computer's move
+                if rng.gen_bool(0.5) { Cell::T } else { Cell::O }
+            },
+        };
+
+        // Attempt to place the computer's piece in a random column
+        for _ in 0..cols {
+            let col = rng.gen_range(0..cols);
+            for row in (0..rows - 1).rev() {
+                if matches!(board[col][row], Cell::Empty) {
+                    let mut new_board = board.clone();
+                    new_board[col][row] = computer_cell;
+                    return Some(new_board);
+                }
+            }
+        }
+    }
+
+    None
 }

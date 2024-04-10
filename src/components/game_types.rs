@@ -34,3 +34,9 @@ pub enum GameState {
 pub struct BoardProps {
     pub game_version: GameVersion,
 }
+
+#[derive(Clone, PartialEq)]
+pub enum Difficulty {
+    Easy,
+    Hard
+}
