@@ -1,15 +1,21 @@
 use yew::prelude::*;
 use crate::components::rules::{TootAndOttoRules, Connect4Rules};
 use crate::components::board::Board;
-// use crate::components::connect4::Connect4Board;
-use crate::components::game_types::{GameVersion, GameVersion::Connect4, GameVersion::TootOtto, Difficulty};
+use crate::components::game_types::{
+    GameVersion, 
+    GameVersion::Connect4, 
+    GameVersion::TootOtto, 
+    Difficulty,
+    Difficulty::Easy, 
+    Difficulty::Hard
+};
 
 #[function_component]
 pub fn App() -> Html {
     let game_version = use_state(|| Connect4);
     let restart_counter = use_state(|| 0); // State to trigger board restarts
 
-    let difficulty = use_state(|| Difficulty::Easy); // Adding a state for the difficulty
+    let difficulty = use_state(|| Easy); // Adding a state for the difficulty
 
     let toggle_version = {
         let game_version = game_version.clone();
@@ -29,29 +35,25 @@ pub fn App() -> Html {
         })
     };
 
-    // let change_difficulty = {
-    //     let difficulty = difficulty.clone();
-    //     Callback::from(move |_| {
-    //         difficulty.set(if *difficulty == Difficulty::Easy {
-    //             Difficulty::Hard
-    //         } else {
-    //             Difficulty::Easy
-    //         });
-    //     })
-    // };
+    let toggle_difficulty = {
+        let difficulty = difficulty.clone();
+        Callback::from(move |_| {
+            difficulty.set(if *difficulty == Easy { Hard } else { Easy });
+        })
+    };
 
     let render_game = |version: &GameVersion| {
         match version {
             GameVersion::Connect4 => html! {
                 <>
                     <Connect4Rules/>
-                    <Board key={format!("connect4-{}", *restart_counter)} game_version={Connect4} />
+                    <Board key={format!("connect4-{}", *restart_counter)} game_version={Connect4} difficulty={(*difficulty).clone()}/>
                     </>
             },
             GameVersion::TootOtto => html! {
                 <>
                     <TootAndOttoRules/>
-                    <Board key={format!("toototto-{}", *restart_counter)} game_version={TootOtto} />
+                    <Board key={format!("toototto-{}", *restart_counter)} game_version={TootOtto} difficulty={(*difficulty).clone()}/>
                     </>
             },
         }
@@ -66,6 +68,12 @@ pub fn App() -> Html {
                 class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
                 {"Switch Game Version"}
+            </button>
+            <button
+                onclick={toggle_difficulty}
+                class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+                {difficulty.to_string()}
             </button>
             <button
                 onclick={restart_game}

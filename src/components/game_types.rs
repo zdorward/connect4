@@ -33,10 +33,20 @@ pub enum GameState {
 #[derive(Clone, PartialEq, Properties)]
 pub struct BoardProps {
     pub game_version: GameVersion,
+    pub difficulty: Difficulty
 }
 
 #[derive(Clone, PartialEq)]
 pub enum Difficulty {
     Easy,
     Hard
+}
+
+impl fmt::Display for Difficulty {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Difficulty::Easy => write!(f, "Easy"),
+            Difficulty::Hard => write!(f, "Hard"),
+        }
+    }
 }
