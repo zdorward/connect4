@@ -1,131 +1,146 @@
-use rand::Rng; // For bot moves
-use std::io;
+use yew::prelude::*;
+use yew::{function_component, html};
 
-use super::Game;
-
-const ROWS: usize = 6;
-const COLS: usize = 7;
-
-struct Connect4 {
-    rows: usize,
-    columns: usize,
+#[derive(Clone, PartialEq)]
+enum Cell {
+    Empty,
+    X,
+    O,
 }
 
-impl Game for Connect4 {
-    fn drop_piece(board: &mut Vec<Vec<char>>, col: usize, piece: char) -> bool {
-        for row in board.iter_mut().rev() {
-            if row[col] == '.' {
-                row[col] = piece;
-                return true;
+enum GameState {
+    Ongoing,
+    WonBy(Cell),
+}
+
+#[function_component(Connect4BoardEric)]
+pub fn connect_4_board() -> Html {
+    let board = use_state(|| vec![vec![Cell::Empty; 6]; 7]);
+    let player_turn = use_state(|| Cell::X);
+    let game_state = use_state(|| GameState::Ongoing);
+
+    html! {
+        <>
+            <div class="board">
+                { for (0..7).map(|x| {
+                    let board = board.clone();
+                    let player_turn = player_turn.clone();
+                    let game_state = game_state.clone();
+                    let onclick = {
+                        let board = board.clone();
+                        let player_turn = player_turn.clone();
+                        let game_state = game_state.clone();
+                        Callback::from(move |_| {
+                            if matches!(*game_state, GameState::Ongoing) {
+                                let mut new_board = (*board).clone();
+                                let column_filled = new_board[x].iter().all(|cell| matches!(cell, Cell::O) || matches!(cell, Cell::X));
+                                if !column_filled {
+                                    for y in (0..6).rev() {
+                                        if matches!(new_board[x][y], Cell::Empty) {
+                                            new_board[x][y] = (*player_turn).clone();
+                                            
+                                            if check_for_win(&new_board) {
+                                                game_state.set(GameState::WonBy((*player_turn).clone()));
+                                                break;
+                                            }
+                                            
+                                            player_turn.set(match *player_turn {
+                                                Cell::X => Cell::O,
+                                                Cell::O => Cell::X,
+                                                _ => unreachable!(),
+                                            });
+                                            break;
+                                        }
+                                    }
+                                    board.set(new_board);
+                                }
+                            }
+                        })
+                    };
+                    html! {
+                        <div class="column" {onclick}>
+                            { for (0..6).map(|y| {
+                                let cell = board[x][y].clone();
+                                let symbol = match cell {
+                                    Cell::X => "X",
+                                    Cell::O => "O",
+                                    Cell::Empty => "",
+                                };
+                                html! {
+                                    <div class="cell">
+                                        {symbol}
+                                    </div>
+                                }
+                            })}
+                        </div>
+                    }
+                })}
+            </div>
+            <p>
+                {
+                    match *game_state {
+                        GameState::WonBy(Cell::X) => "Player X won!".to_string(),
+                        GameState::WonBy(Cell::O) => "Player O won!".to_string(),
+                        _ => "".to_string(),
+                    }
+                }
+            </p>
+        </>
+    }
+}
+
+
+fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
+    let rows = board.len();
+    let cols = board[0].len();
+
+    // Check horizontal lines
+    for y in 0..rows {
+        for x in 0..cols - 3 {
+            if let Some(cell) = board[y][x].clone().into_option() {
+                if board[y][x + 1] == cell && board[y][x + 2] == cell && board[y][x + 3] == cell {
+                    return true;
+                }
             }
         }
-        println!("Column is full, try a different one.");
-        false
     }
-}
 
-pub fn main() {
-    let mut board: Vec<Vec<char>> = vec![vec!['.'; COLS]; ROWS];
-    let mut game_over = false;
-    
-    while !game_over {
-        print_board(&board);
-        
-        // Player's turn
-        let player_col = get_player_input();
-        if drop_piece(&mut board, player_col, 'O') {
-            if check_win(&board, 'O') {
-                game_over = true;
-                println!("Player wins!");
-                break;
-            }
-        }
-
-        // Bot's turn
-        let bot_col = rand::thread_rng().gen_range(0..COLS);
-        println!("Bot chooses column {}", bot_col + 1); // Add 1 to match user-facing numbering
-        if drop_piece(&mut board, bot_col, 'X') {
-            if check_win(&board, 'X') {
-                game_over = true;
-                println!("Bot wins!");
-                break;
+    // Check vertical lines
+    for x in 0..cols {
+        for y in 0..rows - 3 {
+            if let Some(cell) = board[y][x].clone().into_option() {
+                if board[y + 1][x] == cell && board[y + 2][x] == cell && board[y + 3][x] == cell {
+                    return true;
+                }
             }
         }
     }
-    
-    print_board(&board);
-}
 
-pub fn print_board(board: &Vec<Vec<char>>) {
-    for row in board.iter() {
-        for &cell in row.iter() {
-            print!("{} ", cell);
-        }
-        println!();
-    }
-    println!("1 2 3 4 5 6 7"); // Start from 1 instead of 0
-}
-
-pub fn get_player_input() -> usize {
-    loop {
-        println!("Enter a column number (1-7):"); // Prompt for 1-7
-        let mut input = String::new();
-        
-        io::stdin().read_line(&mut input).unwrap();
-        match input.trim().parse::<usize>() {
-            Ok(num) if num >= 1 && num <= COLS => return num - 1, // Convert to 0-based indexing
-            _ => println!("Invalid input, please try again."),
+    // Check diagonal (down-right and up-right)
+    for y in 0..rows - 3 {
+        for x in 0..cols - 3 {
+            if let Some(cell) = board[y][x].clone().into_option() {
+                // Down-right
+                if board[y + 1][x + 1] == cell && board[y + 2][x + 2] == cell && board[y + 3][x + 3] == cell {
+                    return true;
+                }
+                // Up-right (for diagonals going the other way, we start from the bottom)
+                if y >= 3 && board[y - 1][x + 1] == cell && board[y - 2][x + 2] == cell && board[y - 3][x + 3] == cell {
+                    return true;
+                }
+            }
         }
     }
-}
 
-pub fn drop_piece(board: &mut Vec<Vec<char>>, col: usize, piece: char) -> bool {
-    for row in board.iter_mut().rev() {
-        if row[col] == '.' {
-            row[col] = piece;
-            return true;
-        }
-    }
-    println!("Column is full, try a different one.");
     false
 }
 
-pub fn check_win(board: &Vec<Vec<char>>, piece: char) -> bool {
-    // Horizontal check
-    for row in 0..ROWS {
-        for col in 0..=COLS - 4 {
-            if board[row][col] == piece && board[row][col + 1] == piece && board[row][col + 2] == piece && board[row][col + 3] == piece {
-                return true;
-            }
+// Helper to convert Cell to Option<Cell> for easier checking
+impl Cell {
+    fn into_option(self) -> Option<Self> {
+        match self {
+            Cell::Empty => None,
+            _ => Some(self),
         }
     }
-
-    // Vertical check
-    for col in 0..COLS {
-        for row in 0..=ROWS - 4 {
-            if board[row][col] == piece && board[row + 1][col] == piece && board[row + 2][col] == piece && board[row + 3][col] == piece {
-                return true;
-            }
-        }
-    }
-
-    // Diagonal (ascending) check
-    for col in 0..=COLS - 4 {
-        for row in 3..ROWS {
-            if board[row][col] == piece && board[row - 1][col + 1] == piece && board[row - 2][col + 2] == piece && board[row - 3][col + 3] == piece {
-                return true;
-            }
-        }
-    }
-
-    // Diagonal (descending) check
-    for col in 0..=COLS - 4 {
-        for row in 0..=ROWS - 4 {
-            if board[row][col] == piece && board[row + 1][col + 1] == piece && board[row + 2][col + 2] == piece && board[row + 3][col + 3] == piece {
-                return true;
-            }
-        }
-    }
-
-    false
 }

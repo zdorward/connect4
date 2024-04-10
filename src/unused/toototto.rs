@@ -1,5 +1,4 @@
 use yew::prelude::*;
-use yew::{function_component, html};
 
 #[derive(Clone, PartialEq)] 
 enum Cell {
