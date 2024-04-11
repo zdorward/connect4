@@ -71,18 +71,17 @@ fn create_column(
                                 board.set(new_board.clone());
                                 game_state.set(GameState::WonBy((*player_turn).clone()));
                             } else {
-                                // player_turn.set(match (&*player_turn, &*game_version) {
-                                //     (Cell::X, GameVersion::Connect4) | (Cell::T, GameVersion::TootOtto) => Cell::O,
-                                //     (Cell::O, GameVersion::Connect4) => Cell::X,
-                                //     (Cell::O, GameVersion::TootOtto) => Cell::T,
-                                //     _ => unreachable!(),
-                                // });
-
-                                // // Update the board with the player's move
-                                // board.set(new_board.clone());
-
-                                // Make a computer move
                                 if let Some(computer_board) = make_computer_move(&new_board, &player_turn, &game_state, &game_version, &game_difficulty) {
+                                    // Check if the computer's move resulted in a win.
+                                    if check_for_win(&computer_board, &game_version) {
+                                        game_state.set(GameState::WonBy(match *player_turn {
+                                            // Assuming the computer plays the opposite of the player's turn
+                                            Cell::X => Cell::O,
+                                            Cell::O => Cell::X,
+                                            Cell::T => Cell::O, // Adjust based on your game's logic
+                                            _ => unreachable!(),
+                                        }));
+                                    }
                                     board.set(computer_board);
                                 }
                             }
