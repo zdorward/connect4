@@ -138,15 +138,15 @@ fn check_for_win(board: &Vec<Vec<Cell>>, game_version: &GameVersion) -> bool {
     }
 
     // Check diagonal lines
-    for y in 0..rows - 3 {
-        for x in 0..cols - 3 {
+    for y in 0..rows {
+        for x in 0..cols {
             for sequence in &win_sequences {
                 // Down-right
-                if (0..4).all(|i| board[y + i][x + i] == sequence[i]) {
+                if x <= cols - 4 && y <= rows - 4 && (0..4).all(|i| board[y + i][x + i] == sequence[i]) {
                     return true;
                 }
                 // Up-right
-                if y >= 3 && (0..4).all(|i| board[y - i][x + i] == sequence[i]) {
+                if x <= cols - 4 && y >= 3 && (0..4).all(|i| board[y - i][x + i] == sequence[i]) {
                     return true;
                 }
             }
@@ -192,7 +192,54 @@ fn make_computer_move(
                 }
             },
             Difficulty::Hard => {
+                // Determine the computer's and player's cell types
+                let computer_cell =  match player_turn {
+                    Cell::X => Cell::O,
+                    Cell::O => Cell::X,
+                    _ => unreachable!(),
+                };
+                let player_cell = player_turn;
 
+                // Try to find a winning move for the computer
+                for col in 0..cols {
+                    for row in (0..rows-1).rev() {
+                        if matches!(board[col][row], Cell::Empty) {
+                            let mut temp_board = board.clone();
+                            temp_board[col][row] = Cell::O;
+                            if check_for_win(&temp_board, game_version) {
+                                return Some(temp_board);
+                            }
+                            break; // Move to the next column after checking the bottom-most empty cell
+                        }
+                    }
+                }
+
+                // Try to block the player's winning move
+                for col in 0..cols {
+                    for row in (0..rows-1).rev() {
+                        if matches!(board[col][row], Cell::Empty) {
+                            let mut temp_board = board.clone();
+                            temp_board[col][row] = Cell::X; // Temporarily simulate the player's move
+                            if check_for_win(&temp_board, game_version) {
+                                temp_board[col][row] = Cell::O; // Block the player's win
+                                return Some(temp_board);
+                            }
+                            break; // Move to the next column after checking the bottom-most empty cell
+                        }
+                    }
+                }
+
+                // Attempt to place the computer's piece in a random column
+                for _ in 0..cols {
+                    let col = rng.gen_range(0..cols);
+                    for row in (0..rows - 1).rev() {
+                        if matches!(board[col][row], Cell::Empty) {
+                            let mut new_board = board.clone();
+                            new_board[col][row] = computer_cell;
+                            return Some(new_board);
+                        }
+                    }
+                }
             },
         }
     }
