@@ -169,6 +169,34 @@ fn make_computer_move(
                 }
             },
             Difficulty::Hard => {
+                // Try to find a winning move for the computer using the letter O
+                for col in 0..cols {
+                    for row in (0..rows-1).rev() {
+                        if matches!(board[col][row], Cell::Empty) {
+                            let mut temp_board = board.clone();
+                            temp_board[col][row] = Cell::O;
+                            if let Cell::O = check_for_win(&temp_board) {
+                                return Some(temp_board);
+                            }
+                            break; // Move to the next column after checking the bottom-most empty cell
+                        }
+                    }
+                }
+
+                // Try to find a winning move for the computer the letter T
+                for col in 0..cols {
+                    for row in (0..rows-1).rev() {
+                        if matches!(board[col][row], Cell::Empty) {
+                            let mut temp_board = board.clone();
+                            temp_board[col][row] = Cell::O;
+                            if let Cell::O = check_for_win(&temp_board) {
+                                return Some(temp_board);
+                            }
+                            break; // Move to the next column after checking the bottom-most empty cell
+                        }
+                    }
+                }
+
                 // Try to block the player's winning move using a T
                 for col in 0..cols {
                     for row in (0..rows-1).rev() {
