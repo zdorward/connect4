@@ -48,13 +48,13 @@ pub fn App() -> Html {
             GameVersion::Connect4 => html! {
                 <>
                     <Connect4Rules/>
-                    <Connect4Board key={format!("connect4-{}", *restart_counter)} game_version={Connect4} difficulty={(*difficulty).clone()}/>
+                    <Connect4Board key={format!("connect4-{}-{}", *restart_counter, (*difficulty).to_string())} game_version={Connect4} difficulty={(*difficulty).clone()}/>
                     </>
             },
             GameVersion::TootOtto => html! {
                 <>
                     <TootAndOttoRules/>
-                    <TootOttoBoard key={format!("toototto-{}", *restart_counter)} difficulty={(*difficulty).clone()}/>
+                    <TootOttoBoard key={format!("toototto-{}-{}", *restart_counter, (*difficulty).to_string())} difficulty={(*difficulty).clone()}/>
                     </>
             },
         }
