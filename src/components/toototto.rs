@@ -27,15 +27,33 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
     let num_cols = 7;
 
     let board = use_state(|| vec![vec![Cell::Empty; num_rows]; num_cols]);
-    let player_turn = use_state(|| Cell::T); // Assuming player starts with 'T'
+    let player_choice = use_state(|| Cell::T); // Assuming player starts with 'T'
     let game_state = use_state(|| GameState::Ongoing);
     let game_difficulty = use_state(|| props.difficulty.clone());
+
+    let toggle_player_choice = {
+        let player_choice = player_choice.clone();
+        Callback::from(move |_| {
+            let new_choice = match *player_choice {
+                Cell::T => Cell::O,
+                Cell::O => Cell::T,
+                _ => Cell::T,
+            };
+            player_choice.set(new_choice);
+        })
+    };
 
     html! {
         <>
             <h1>{ format!("Welcome to Toot and Otto")}</h1>
+            <button 
+                onclick={toggle_player_choice}
+                class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+                { format!("Selected Piece: {}", match *player_choice { Cell::T => "T", Cell::O => "O", _ => "Error" }) }
+            </button>
             <div class="board">
-                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
+                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_choice.clone(), game_state.clone(), game_difficulty.clone())) }
             </div>
             <p>
                 {
@@ -54,19 +72,19 @@ fn create_column(
     x: usize,
     num_rows: usize,
     board: UseStateHandle<Vec<Vec<Cell>>>,
-    player_turn: UseStateHandle<Cell>,
+    player_choice: UseStateHandle<Cell>,
     game_state: UseStateHandle<GameState>,
     game_difficulty: UseStateHandle<Difficulty>
 ) -> Html {
     let onclick = {
         let board = board.clone();
-        let player_turn = player_turn.clone();
+        let player_choice = player_choice.clone();
         let game_state = game_state.clone();
         let game_difficulty = game_difficulty.clone();
         Callback::from(move |_| {
             if matches!(*game_state, GameState::Ongoing) {
                 let mut new_board = (*board).clone();
-                if let Some(updated_board) = make_player_move(x, num_rows, &new_board, &player_turn) {
+                if let Some(updated_board) = make_player_move(x, num_rows, &new_board, &player_choice) {
                     new_board = updated_board;
                     let win_state = check_for_win(&new_board);
                     if win_state != Cell::Empty {
@@ -111,14 +129,14 @@ fn make_player_move(
     x: usize,
     num_rows: usize,
     board: &Vec<Vec<Cell>>,
-    player_turn: &Cell,
+    player_choice: &Cell,
 ) -> Option<Vec<Vec<Cell>>> {
     let mut new_board = board.clone();
     let column_filled = new_board[x].iter().all(|cell| !matches!(cell, Cell::Empty));
     if !column_filled {
         for y in (0..num_rows).rev() {
             if matches!(new_board[x][y], Cell::Empty) {
-                new_board[x][y] = player_turn.clone();
+                new_board[x][y] = player_choice.clone();
                 return Some(new_board);
             }
         }
@@ -143,7 +161,7 @@ fn make_computer_move(
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
                 // Attempt to place the computer's piece in a random column
-                for _ in 0..cols {
+                for _ in 0..cols - 1 {
                     let col = rng.gen_range(0..cols);
                     for row in (0..rows - 1).rev() {
                         if matches!(board[col][row], Cell::Empty) {
