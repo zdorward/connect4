@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::components::game_types::{BoardProps, Cell, GameState, Difficulty};
+use crate::components::lib::{BoardProps, Cell, GameState, Difficulty};
 
 #[function_component(Connect4Board)]
 pub fn board(props: &BoardProps) -> Html {

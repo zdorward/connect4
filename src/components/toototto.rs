@@ -1,7 +1,7 @@
 use yew::prelude::*;
 // use web_sys::console;
 use rand::{thread_rng, Rng};
-use crate::components::game_types::Difficulty;
+use crate::components::lib::Difficulty;
 
 #[derive(Clone, PartialEq)] 
 enum Cell {
