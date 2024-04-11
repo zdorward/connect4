@@ -1,7 +1,21 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::components::lib::{BoardProps, Cell, GameState, Difficulty};
+use crate::components::lib::{BoardProps, Difficulty};
+
+#[derive(Clone, PartialEq)]
+pub enum Cell {
+    Empty,
+    X,
+    O,
+}
+
+#[derive(Clone, PartialEq)]
+pub enum GameState {
+    Ongoing,
+    WonBy(Cell),
+}
+
 
 #[function_component(Connect4Board)]
 pub fn board(props: &BoardProps) -> Html {

@@ -2,13 +2,6 @@ use yew::prelude::*;
 use std::fmt;
 
 #[derive(Clone, PartialEq)]
-pub enum Cell {
-    Empty,
-    X,
-    O,
-}
-
-#[derive(Clone, PartialEq)]
 pub enum GameVersion {
     Connect4,
     TootOtto,
@@ -21,12 +14,6 @@ impl fmt::Display for GameVersion {
             GameVersion::TootOtto => write!(f, "TootOtto"),
         }
     }
-}
-
-#[derive(Clone, PartialEq)]
-pub enum GameState {
-    Ongoing,
-    WonBy(Cell),
 }
 
 #[derive(Clone, PartialEq, Properties)]

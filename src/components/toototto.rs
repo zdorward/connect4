@@ -1,7 +1,6 @@
 use yew::prelude::*;
-// use web_sys::console;
 use rand::{thread_rng, Rng};
-use crate::components::lib::Difficulty;
+use crate::components::lib::{Difficulty, BoardProps};
 
 #[derive(Clone, PartialEq)] 
 enum Cell {
@@ -14,11 +13,6 @@ enum Cell {
 enum GameState {
     Ongoing,
     WonBy(Cell),
-}
-
-#[derive(Clone, PartialEq, Properties)]
-pub struct BoardProps {
-    pub difficulty: Difficulty
 }
 
 #[function_component(TootOttoBoard)]
