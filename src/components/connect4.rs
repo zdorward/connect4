@@ -23,7 +23,7 @@ pub fn board(props: &BoardProps) -> Html {
             <p>
                 {
                     match *game_state {
-                        GameState::WonBy(Cell::T) | GameState::WonBy(Cell::X) => "Player 1 won!".to_string(),
+                        GameState::WonBy(Cell::X) => "Player 1 won!".to_string(),
                         GameState::WonBy(Cell::O) => "Player 2 won!".to_string(),
                         _ => "".to_string(),
                     }
@@ -84,7 +84,6 @@ fn create_column(
                 let cell = board[x][y].clone();
                 let symbol = match cell {
                     Cell::X => "X",
-                    Cell::T => "T",
                     Cell::O => "O",
                     Cell::Empty => "",
                 };
@@ -187,7 +186,6 @@ fn make_computer_move(
                     Cell::O => Cell::X,
                     _ => unreachable!(),
                 };
-                let player_cell = player_turn;
 
                 // Try to find a winning move for the computer
                 for col in 0..cols {
