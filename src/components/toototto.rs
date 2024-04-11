@@ -58,8 +58,8 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             <p>
                 {
                     match *game_state {
-                        GameState::WonBy(Cell::T) => "Player T won!".to_string(),
-                        GameState::WonBy(Cell::O) => "Player O won!".to_string(),
+                        GameState::WonBy(Cell::T) => "You win!".to_string(),
+                        GameState::WonBy(Cell::O) => "Bot wins!".to_string(),
                         _ => "".to_string(),
                     }
                 }
@@ -67,6 +67,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
         </>
     }
 }
+
 
 fn create_column(
     x: usize,
