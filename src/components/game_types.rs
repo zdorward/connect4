@@ -5,7 +5,6 @@ use std::fmt;
 pub enum Cell {
     Empty,
     X,
-    T,
     O,
 }
 
