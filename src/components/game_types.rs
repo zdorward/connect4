@@ -32,7 +32,6 @@ pub enum GameState {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct BoardProps {
-    pub game_version: GameVersion,
     pub difficulty: Difficulty
 }
 

@@ -6,7 +6,6 @@ use crate::components::game_types::{
     GameVersion, 
     GameVersion::Connect4, 
     GameVersion::TootOtto, 
-    Difficulty,
     Difficulty::Easy, 
     Difficulty::Hard
 };
@@ -45,17 +44,17 @@ pub fn App() -> Html {
 
     let render_game = |version: &GameVersion| {
         match version {
-            GameVersion::Connect4 => html! {
+            Connect4 => html! {
                 <>
                     <Connect4Rules/>
-                    <Connect4Board key={format!("connect4-{}-{}", *restart_counter, (*difficulty).to_string())} game_version={Connect4} difficulty={(*difficulty).clone()}/>
-                    </>
+                    <Connect4Board key={format!("connect4-{}-{}", *restart_counter, (*difficulty).to_string())} difficulty={(*difficulty).clone()}/>
+                </>
             },
-            GameVersion::TootOtto => html! {
+            TootOtto => html! {
                 <>
                     <TootAndOttoRules/>
                     <TootOttoBoard key={format!("toototto-{}-{}", *restart_counter, (*difficulty).to_string())} difficulty={(*difficulty).clone()}/>
-                    </>
+                </>
             },
         }
     };

@@ -1,18 +1,13 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
-use web_sys::console;
 
-
-use crate::components::game_types::{BoardProps, Cell, GameVersion, GameState, Difficulty};
-
-use super::game_types::_BoardProps::difficulty; 
+use crate::components::game_types::{BoardProps, Cell, GameState, Difficulty};
 
 #[function_component(Connect4Board)]
 pub fn board(props: &BoardProps) -> Html {
     let num_rows = 6;
     let num_cols = 7;
 
-    let game_version = use_state(|| props.game_version.clone());
     let game_difficulty = use_state(|| props.difficulty.clone());
     let initial_turn = Cell::X;
     let board = use_state(|| vec![vec![Cell::Empty; num_rows]; num_cols]);
@@ -21,12 +16,9 @@ pub fn board(props: &BoardProps) -> Html {
 
     html! {
         <>
-            <h1>{ format!("Welcome to {}", match *game_version {
-                GameVersion::Connect4 => "Connect4",
-                GameVersion::TootOtto => "Toot and Otto",
-            }) }</h1>
+            <h1>{ format!("Welcome to Connect 4") }</h1>
             <div class="board">
-                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_version.clone(), game_state.clone(), game_difficulty.clone())) }
+                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
             </div>
             <p>
                 {
@@ -46,14 +38,12 @@ fn create_column(
     num_rows: usize,
     board: UseStateHandle<Vec<Vec<Cell>>>,
     player_turn: UseStateHandle<Cell>,
-    game_version: UseStateHandle<GameVersion>,
     game_state: UseStateHandle<GameState>,
     game_difficulty: UseStateHandle<Difficulty>
 ) -> Html {
     let onclick = {
         let board = board.clone();
         let player_turn = player_turn.clone();
-        let game_version = game_version.clone();
         let game_state = game_state.clone();
         Callback::from(move |_| {
             if matches!(*game_state, GameState::Ongoing) {
@@ -64,13 +54,13 @@ fn create_column(
                         if matches!(new_board[x][y], Cell::Empty) {
                             new_board[x][y] = (*player_turn).clone();
                             
-                            if check_for_win(&new_board, &game_version) {
+                            if check_for_win(&new_board) {
                                 board.set(new_board.clone());
                                 game_state.set(GameState::WonBy((*player_turn).clone()));
                             } else {
-                                if let Some(computer_board) = make_computer_move(&new_board, &player_turn, &game_state, &game_version, &game_difficulty) {
+                                if let Some(computer_board) = make_computer_move(&new_board, &player_turn, &game_state, &game_difficulty) {
                                     // Check if the computer's move resulted in a win.
-                                    if check_for_win(&computer_board, &game_version) {
+                                    if check_for_win(&computer_board) {
                                         game_state.set(GameState::WonBy(match *player_turn {
                                             // Assuming the computer plays the opposite of the player's turn
                                             Cell::X => Cell::O,
@@ -108,7 +98,7 @@ fn create_column(
     }
 }
 
-fn check_for_win(board: &Vec<Vec<Cell>>, game_version: &GameVersion) -> bool {
+fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
 
     let rows = board.len();
     let cols = board[0].len();
@@ -160,7 +150,6 @@ fn make_computer_move(
     board: &Vec<Vec<Cell>>,
     player_turn: &Cell,
     game_state: &GameState,
-    game_version: &GameVersion,
     game_difficulty: &Difficulty
 ) -> Option<Vec<Vec<Cell>>> {
     if matches!(*game_state, GameState::Ongoing) {
@@ -206,7 +195,7 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::O;
-                            if check_for_win(&temp_board, game_version) {
+                            if check_for_win(&temp_board) {
                                 return Some(temp_board);
                             }
                             break; // Move to the next column after checking the bottom-most empty cell
@@ -220,7 +209,7 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::X; // Temporarily simulate the player's move
-                            if check_for_win(&temp_board, game_version) {
+                            if check_for_win(&temp_board) {
                                 temp_board[col][row] = Cell::O; // Block the player's win
                                 return Some(temp_board);
                             }
