@@ -1,198 +1,201 @@
-// use yew::prelude::*;
-// use yew::{function_component, html};
-
-// #[derive(Clone, PartialEq)]
-// enum Cell {
-//     Empty,
-//     X,
-//     O,
-// }
-
-// enum GameState {
-//     Ongoing,
-//     WonBy(Cell),
-// }
-
-// #[derive(Clone, PartialEq)]
-// enum Difficulty {
-//     Easy,
-//     Hard,
-// }
-
-// #[function_component(Connect4Board)]
-// pub fn connect_4_board() -> Html {
-//     let board = use_state(|| vec![vec![Cell::Empty; 6]; 7]);
-//     let player_turn = use_state(|| Cell::X);
-//     let game_state = use_state(|| GameState::Ongoing);
-//     let difficulty = use_state(|| Difficulty::Easy); // Default to Easy mode for simplicity
-
-//     // Function to make a move for the bot in Easy mode
-//     let make_bot_move = {
-//         let board = board.clone();
-//         let player_turn = player_turn.clone();
-//         let game_state = game_state.clone();
-//         Callback::from(move |_| {
-//             if matches!(*game_state, GameState::Ongoing) && matches!(*player_turn, Cell::O) {
-//                 let mut rng = thread_rng();
-//                 loop {
-//                     let x = rng.gen_range(0..7);
-//                     let mut new_board = (*board).clone();
-//                     let column_filled = new_board[x].iter().all(|cell| matches!(cell, Cell::O) || matches!(cell, Cell::X));
-//                     if !column_filled {
-//                         for y in (0..6).rev() {
-//                             if matches!(new_board[x][y], Cell::Empty) {
-//                                 new_board[x][y] = Cell::O;
-//                                 if check_for_win(&new_board) {
-//                                     game_state.set(GameState::WonBy(Cell::O));
-//                                 } else {
-//                                     player_turn.set(Cell::X); // Switch back to player X
-//                                 }
-//                                 board.set(new_board);
-//                                 break;
-//                             }
-//                         }
-//                         break; // Exit the loop after making a move
-//                     }
-//                 }
-//             }
-//         })
-//     };
-
-//     let on_easy_click = {
-//         let difficulty = difficulty.clone();
-//         Callback::from(move |_| difficulty.set(Difficulty::Easy))
-//     };
-
-//     let on_hard_click = {
-//         let difficulty = difficulty.clone();
-//         Callback::from(move |_| difficulty.set(Difficulty::Hard))
-//     };
-
-//     html! {
-//         <>
-//             <button {on_easy_click}>{"Easy"}</button>
-//             <button {on_hard_click}>{"Hard"}</button>
-//             <p>{format!("Current mode: {:?}", *difficulty)}</p>
-//             <div class="board">
-//                 { for (0..7).map(|x| {
-//                     let board = board.clone();
-//                     let player_turn = player_turn.clone();
-//                     let game_state = game_state.clone();
-//                     let difficulty = difficulty.clone();
-//                     let make_bot_move = make_bot_move.clone();
-//                     let onclick = {
-//                         let board = board.clone();
-//                         let player_turn = player_turn.clone();
-//                         let game_state = game_state.clone();
-//                         let make_bot_move = make_bot_move.clone();
-//                         Callback::from(move |_| {
-//                             if matches!(*game_state, GameState::Ongoing) && matches!(*player_turn, Cell::X) {
-//                                 let mut new_board = (*board).clone();
-//                                 let column_filled = new_board[x].iter().all(|cell| matches!(cell, Cell::O) || matches!(cell, Cell::X));
-//                                 if !column_filled {
-//                                     for y in (0..6).rev() {
-//                                         if matches!(new_board[x][y], Cell::Empty) {
-//                                             new_board[x][y] = Cell::X;
-//                                             if check_for_win(&new_board) {
-//                                                 game_state.set(GameState::WonBy(Cell::X));
-//                                             } else {
-//                                                 player_turn.set(Cell::O); // Switch to player O
-//                                                 if matches!(*difficulty, Difficulty::Easy) {
-//                                                     make_bot_move.emit(()); // Make the bot move immediately after player X
-//                                                 }
-//                                             }
-//                                             board.set(new_board);
-//                                             break;
-//                                         }
-//                                     }
-//                                 }
-//                             }
-//                         })
-//                     };
-//                     html! {
-//                         <div class="column" {onclick}>
-//                             { for (0..6).map(|y| {
-//                                 let cell = board[x][y].clone();
-//                                 let symbol = match cell {
-//                                     Cell::X => "X",
-//                                     Cell::O => "O",
-//                                     Cell::Empty => "",
-//                                 };
-//                                 html! {
-//                                     <div class="cell">
-//                                         {symbol}
-//                                     </div>
-//                                 }
-//                             })}
-//                         </div>
-//                     }
-//                 })}
-//             </div>
-//             <p>
-//                 {
-//                     match *game_state {
-//                         GameState::WonBy(Cell::X) => "Player X won!".to_string(),
-//                         GameState::WonBy(Cell::O) => "Player O won!".to_string(),
-//                         _ => "".to_string(),
-//                     }
-//                 }
-//             </p>
-//         </>
-//     }
-// }
+use yew::prelude::*;
+use rand::{thread_rng, Rng};
+use web_sys::console;
 
 
-// fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
-//     let rows = board.len();
-//     let cols = board[0].len();
+use crate::components::game_types::{BoardProps, Cell, GameVersion, GameState, Difficulty};
 
-//     // Check horizontal lines
-//     for y in 0..rows {
-//         for x in 0..cols - 3 {
-//             if let Some(cell) = board[y][x].clone().into_option() {
-//                 if board[y][x + 1] == cell && board[y][x + 2] == cell && board[y][x + 3] == cell {
-//                     return true;
-//                 }
-//             }
-//         }
-//     }
+use super::game_types::_BoardProps::difficulty; 
 
-//     // Check vertical lines
-//     for x in 0..cols {
-//         for y in 0..rows - 3 {
-//             if let Some(cell) = board[y][x].clone().into_option() {
-//                 if board[y + 1][x] == cell && board[y + 2][x] == cell && board[y + 3][x] == cell {
-//                     return true;
-//                 }
-//             }
-//         }
-//     }
+#[function_component(Connect4Board)]
+pub fn board(props: &BoardProps) -> Html {
+    let num_rows = 6;
+    let num_cols = 7;
 
-//     // Check diagonal (down-right and up-right)
-//     for y in 0..rows - 3 {
-//         for x in 0..cols - 3 {
-//             if let Some(cell) = board[y][x].clone().into_option() {
-//                 // Down-right
-//                 if board[y + 1][x + 1] == cell && board[y + 2][x + 2] == cell && board[y + 3][x + 3] == cell {
-//                     return true;
-//                 }
-//                 // Up-right (for diagonals going the other way, we start from the bottom)
-//                 if y >= 3 && board[y - 1][x + 1] == cell && board[y - 2][x + 2] == cell && board[y - 3][x + 3] == cell {
-//                     return true;
-//                 }
-//             }
-//         }
-//     }
+    let game_version = use_state(|| props.game_version.clone());
+    let game_difficulty = use_state(|| props.difficulty.clone());
+    let initial_turn = Cell::X;
+    let board = use_state(|| vec![vec![Cell::Empty; num_rows]; num_cols]);
+    let player_turn = use_state(move || initial_turn);
+    let game_state = use_state(|| GameState::Ongoing);
 
-//     false
-// }
+    html! {
+        <>
+            <h1>{ format!("Welcome to {}", match *game_version {
+                GameVersion::Connect4 => "Connect4",
+                GameVersion::TootOtto => "Toot and Otto",
+            }) }</h1>
+            <div class="board">
+                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_version.clone(), game_state.clone(), game_difficulty.clone())) }
+            </div>
+            <p>
+                {
+                    match *game_state {
+                        GameState::WonBy(Cell::T) | GameState::WonBy(Cell::X) => "Player 1 won!".to_string(),
+                        GameState::WonBy(Cell::O) => "Player 2 won!".to_string(),
+                        _ => "".to_string(),
+                    }
+                }
+            </p>
+        </>
+    }
+}
 
-// // Helper to convert Cell to Option<Cell> for easier checking
-// impl Cell {
-//     fn into_option(self) -> Option<Self> {
-//         match self {
-//             Cell::Empty => None,
-//             _ => Some(self),
-//         }
-//     }
-// }
+fn create_column(
+    x: usize,
+    num_rows: usize,
+    board: UseStateHandle<Vec<Vec<Cell>>>,
+    player_turn: UseStateHandle<Cell>,
+    game_version: UseStateHandle<GameVersion>,
+    game_state: UseStateHandle<GameState>,
+    game_difficulty: UseStateHandle<Difficulty>
+) -> Html {
+    let onclick = {
+        let board = board.clone();
+        let player_turn = player_turn.clone();
+        let game_version = game_version.clone();
+        let game_state = game_state.clone();
+        Callback::from(move |_| {
+            if matches!(*game_state, GameState::Ongoing) {
+                let mut new_board = (*board).clone();
+                let column_filled = new_board[x].iter().all(|cell| *cell != Cell::Empty);
+                if !column_filled {
+                    for y in (0..num_rows).rev() {
+                        if matches!(new_board[x][y], Cell::Empty) {
+                            new_board[x][y] = (*player_turn).clone();
+                            
+                            if check_for_win(&new_board, &game_version) {
+                                board.set(new_board.clone());
+                                game_state.set(GameState::WonBy((*player_turn).clone()));
+                            } else {
+                                if let Some(computer_board) = make_computer_move(&new_board, &player_turn, &game_state, &game_version, &game_difficulty) {
+                                    // Check if the computer's move resulted in a win.
+                                    if check_for_win(&computer_board, &game_version) {
+                                        game_state.set(GameState::WonBy(match *player_turn {
+                                            // Assuming the computer plays the opposite of the player's turn
+                                            Cell::X => Cell::O,
+                                            Cell::O => Cell::X,
+                                            _ => unreachable!(),
+                                        }));
+                                    }
+                                    board.set(computer_board);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        })
+    };
+    html! {
+        <div class="column" {onclick}>
+            { for (0..num_rows).map(|y| {
+                let cell = board[x][y].clone();
+                let symbol = match cell {
+                    Cell::X => "X",
+                    Cell::T => "T",
+                    Cell::O => "O",
+                    Cell::Empty => "",
+                };
+                html! {
+                    <div class="cell">
+                        {symbol}
+                    </div>
+                }
+            })}
+        </div>
+    }
+}
+
+fn check_for_win(board: &Vec<Vec<Cell>>, game_version: &GameVersion) -> bool {
+
+    let rows = board.len();
+    let cols = board[0].len();
+
+    let win_sequences = vec![vec![Cell::X, Cell::X, Cell::X, Cell::X], vec![Cell::O, Cell::O, Cell::O, Cell::O]];
+
+    // Check horizontal lines
+    for y in 0..rows {
+        for x in 0..cols - 3 {
+            for sequence in &win_sequences {
+                if (0..4).all(|i| board[y][x + i] == sequence[i]) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // Check vertical lines
+    for x in 0..cols {
+        for y in 0..rows - 3 {
+            for sequence in &win_sequences {
+                if (0..4).all(|i| board[y + i][x] == sequence[i]) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // Check diagonal lines
+    for y in 0..rows - 3 {
+        for x in 0..cols - 3 {
+            for sequence in &win_sequences {
+                // Down-right
+                if (0..4).all(|i| board[y + i][x + i] == sequence[i]) {
+                    return true;
+                }
+                // Up-right
+                if y >= 3 && (0..4).all(|i| board[y - i][x + i] == sequence[i]) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    false
+}
+
+fn make_computer_move(
+    board: &Vec<Vec<Cell>>,
+    player_turn: &Cell,
+    game_state: &GameState,
+    game_version: &GameVersion,
+    game_difficulty: &Difficulty
+) -> Option<Vec<Vec<Cell>>> {
+    if matches!(*game_state, GameState::Ongoing) {
+
+        let mut rng = thread_rng();
+        let cols = board[0].len();
+        let rows = board.len();
+
+        match game_difficulty {
+            Difficulty::Easy => {
+                // Determine the computer's cell type based on the current player's type and game version
+                let computer_cell =  match player_turn {
+                        Cell::X => Cell::O,
+                        Cell::O => Cell::X,
+                        _ => unreachable!(),
+                    };
+
+
+                // Attempt to place the computer's piece in a random column
+                for _ in 0..cols {
+                    let col = rng.gen_range(0..cols);
+                    for row in (0..rows - 1).rev() {
+                        if matches!(board[col][row], Cell::Empty) {
+                            let mut new_board = board.clone();
+                            new_board[col][row] = computer_cell;
+                            return Some(new_board);
+                        }
+                    }
+                }
+            },
+            Difficulty::Hard => {
+
+            },
+        }
+    }
+
+    None
+}

@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use crate::components::rules::{TootAndOttoRules, Connect4Rules};
-use crate::components::board::Board;
+use crate::components::connect4::Connect4Board;
 use crate::components::game_types::{
     GameVersion, 
     GameVersion::Connect4, 
@@ -47,13 +47,13 @@ pub fn App() -> Html {
             GameVersion::Connect4 => html! {
                 <>
                     <Connect4Rules/>
-                    <Board key={format!("connect4-{}", *restart_counter)} game_version={Connect4} difficulty={(*difficulty).clone()}/>
+                    <Connect4Board key={format!("connect4-{}", *restart_counter)} game_version={Connect4} difficulty={(*difficulty).clone()}/>
                     </>
             },
             GameVersion::TootOtto => html! {
                 <>
                     <TootAndOttoRules/>
-                    <Board key={format!("toototto-{}", *restart_counter)} game_version={TootOtto} difficulty={(*difficulty).clone()}/>
+                    // <Board key={format!("toototto-{}", *restart_counter)} game_version={TootOtto} difficulty={(*difficulty).clone()}/>
                     </>
             },
         }
