@@ -4,9 +4,6 @@ use crate::components::rules::{TootAndOttoRules, Connect4Rules};
 use crate::components::connect4::Connect4Board;
 use crate::components::toototto::TootOttoBoard;
 use crate::components::lib::{
-    GameVersion, 
-    GameVersion::Connect4, 
-    GameVersion::TootOtto, 
     Difficulty::Easy, 
     Difficulty::Hard
 };
