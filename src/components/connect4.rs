@@ -35,8 +35,8 @@ pub fn board(props: &BoardProps) -> Html {
             <p>
                 {
                     match *game_state {
-                        GameState::WonBy(Cell::X) => "Player 1 won!".to_string(),
-                        GameState::WonBy(Cell::O) => "Player 2 won!".to_string(),
+                        GameState::WonBy(Cell::X) => "You win!".to_string(),
+                        GameState::WonBy(Cell::O) => "Bot wins!".to_string(),
                         GameState::Draw => "Draw!".to_string(),
                         _ => "".to_string(),
                     }
