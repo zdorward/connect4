@@ -145,14 +145,14 @@ pub fn App() -> Html {
                     <input type="number" min="4" max="20" value={(*num_rows).to_string()} oninput={set_num_rows} />
                     <input type="number" min="4" max="20" value={(*num_cols).to_string()} oninput={set_num_cols} />
                     <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Connect 4") }</h1>
-                    { game_buttons }
+                    
                     <Connect4Board 
                         key={format!("board-{}-{}-{}-{}", *num_rows, *num_cols, *restart_counter, (*difficulty).to_string())}
                         difficulty={(*difficulty).clone()} 
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
                     />
-                    
+                    { game_buttons }
                     <button
                         onclick={switch_to_toot_otto}
                         class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -164,14 +164,14 @@ pub fn App() -> Html {
             AppState::PlayTootOtto => html! {
                 <>
                     <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Toot and Otto")}</h1>
-                    { game_buttons }
+                    
                     <TootOttoBoard 
                         key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
                         difficulty={(*difficulty).clone()} 
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
                     />
-                    
+                    { game_buttons }
                     <button
                         onclick={switch_to_connect4}
                         class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
