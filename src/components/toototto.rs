@@ -1,6 +1,7 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
 use crate::components::lib::{Difficulty, BoardProps, ColorBlindMode};
+use rand::seq::SliceRandom; // Import the necessary trait for shuffling
 
 #[derive(Clone, PartialEq)] 
 enum Cell {
@@ -222,9 +223,11 @@ fn make_computer_move(
             Difficulty::Easy => {
                 // Determine the computer's cell type based on the current player's type and game version
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
+                let mut columns: Vec<usize> = (0..cols).collect(); // Create a list of column indices
+                columns.shuffle(&mut rng); // Shuffle the list of indices to randomize the order
 
-                for _ in 0..1000 {
-                    let col = rng.gen_range(0..cols);
+                // Attempt to place the computer's piece in a random column
+                for col in columns {
                     for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
@@ -233,25 +236,26 @@ fn make_computer_move(
                             match computer_cell {
                                 Cell::T => {
                                     if **bot_t_count > 0 {
-                                        bot_t_count.set(**bot_t_count - 1);
                                         new_board[col][row] = Cell::T;
+                                        bot_t_count.set(**bot_t_count - 1);
                                     } else {
-                                        bot_o_count.set(**bot_o_count - 1);
                                         new_board[col][row] = Cell::O;
+                                        bot_o_count.set(**bot_o_count - 1);
                                     }
                                 },
                                 Cell::O => {
                                     if **bot_o_count > 0 {
-                                        bot_o_count.set(**bot_o_count - 1);
                                         new_board[col][row] = Cell::O;
+                                        bot_o_count.set(**bot_o_count - 1);
                                     } else {
-                                        bot_t_count.set(**bot_t_count - 1);
                                         new_board[col][row] = Cell::T;
+                                        bot_t_count.set(**bot_t_count - 1);
                                     }
                                 },
                                 _ => {} // Fallback case (though technically unreachable)
                             }
-
+                            
+                            
                             return Some(new_board);
                         }
                     }
@@ -322,10 +326,11 @@ fn make_computer_move(
                 }
 
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
+                let mut columns: Vec<usize> = (0..cols).collect(); // Create a list of column indices
+                columns.shuffle(&mut rng); // Shuffle the list of indices to randomize the order
 
                 // Attempt to place the computer's piece in a random column
-                for _ in 0..1000 {
-                    let col = rng.gen_range(0..cols);
+                for col in columns {
                     for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
