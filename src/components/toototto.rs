@@ -223,7 +223,7 @@ fn make_computer_move(
                 // Determine the computer's cell type based on the current player's type and game version
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
-                for _ in 0..cols {
+                for _ in 0..1000 {
                     let col = rng.gen_range(0..cols);
                     for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
@@ -324,7 +324,7 @@ fn make_computer_move(
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
                 // Attempt to place the computer's piece in a random column
-                for _ in 0..cols {
+                for _ in 0..1000 {
                     let col = rng.gen_range(0..cols);
                     for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
@@ -334,20 +334,20 @@ fn make_computer_move(
                             match computer_cell {
                                 Cell::T => {
                                     if **bot_t_count > 0 {
-                                        bot_t_count.set(**bot_t_count - 1);
                                         new_board[col][row] = Cell::T;
+                                        bot_t_count.set(**bot_t_count - 1);
                                     } else {
-                                        bot_o_count.set(**bot_o_count - 1);
                                         new_board[col][row] = Cell::O;
+                                        bot_o_count.set(**bot_o_count - 1);
                                     }
                                 },
                                 Cell::O => {
                                     if **bot_o_count > 0 {
-                                        bot_o_count.set(**bot_o_count - 1);
                                         new_board[col][row] = Cell::O;
+                                        bot_o_count.set(**bot_o_count - 1);
                                     } else {
-                                        bot_t_count.set(**bot_t_count - 1);
                                         new_board[col][row] = Cell::T;
+                                        bot_t_count.set(**bot_t_count - 1);
                                     }
                                 },
                                 _ => {} // Fallback case (though technically unreachable)
