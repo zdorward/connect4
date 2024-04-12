@@ -143,7 +143,7 @@ pub fn App() -> Html {
                             onclick={switch_to_toot_otto} 
                             class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         >
-                            { "Play Toot and Otto" }
+                            { "Play TOOT and OTTO" }
                         </button>
                         <button 
                             onclick={show_rules} 
@@ -172,13 +172,13 @@ pub fn App() -> Html {
                         onclick={switch_to_toot_otto}
                         class="mt-4 py-2 px-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                    {"Play Toot and Otto"}
+                    {"Play TOOT and OTTO"}
                     </button>
                 </>
             },
             AppState::PlayTootOtto => html! {
                 <>
-                    <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Toot and Otto")}</h1>
+                    <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("TOOT and OTTO")}</h1>
                     
                     <TootOttoBoard 
                         key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
