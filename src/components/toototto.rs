@@ -47,7 +47,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             >
                 { format!("Selected Piece: {}", match *player_choice { Cell::T => "T", Cell::O => "O", _ => "Error" }) }
             </button>
-            <div class="board">
+            <div class="board-toot-otto">
                 { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_choice.clone(), game_state.clone(), game_difficulty.clone())) }
             </div>
             <p>
@@ -248,8 +248,8 @@ fn make_computer_move(
 }
 
 fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
-    let rows = board.len();
-    let cols = board[0].len();
+    let rows = board[0].len();
+    let cols = board.len();
 
     // Define the winning sequences for each player.
     let toot_sequence = vec![Cell::T, Cell::O, Cell::O, Cell::T];

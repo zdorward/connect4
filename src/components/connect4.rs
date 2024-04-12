@@ -31,7 +31,7 @@ pub fn board(props: &BoardProps) -> Html {
     html! {
         <>
             <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Connect 4") }</h1>
-            <div class="board-toot-otto">
+            <div class="board">
                 { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
             </div>
             <p>
@@ -113,8 +113,8 @@ fn create_column(
 
 fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
 
-    let rows = board.len();
-    let cols = board[0].len();
+    let rows = board[0].len();
+    let cols = board.len();
 
     let win_sequences = vec![vec![Cell::X, Cell::X, Cell::X, Cell::X], vec![Cell::O, Cell::O, Cell::O, Cell::O]];
 
@@ -168,8 +168,8 @@ fn make_computer_move(
     if matches!(*game_state, GameState::Ongoing) {
 
         let mut rng = thread_rng();
-        let cols = board[0].len();
-        let rows = board.len();
+        let rows = board[0].len();
+        let cols = board.len();
 
         match game_difficulty {
             Difficulty::Easy => {
@@ -184,7 +184,7 @@ fn make_computer_move(
                 // Attempt to place the computer's piece in a random column
                 for _ in 0..cols {
                     let col = rng.gen_range(0..cols);
-                    for row in (0..rows - 1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
                             new_board[col][row] = computer_cell;
@@ -203,7 +203,7 @@ fn make_computer_move(
 
                 // Try to find a winning move for the computer
                 for col in 0..cols {
-                    for row in (0..rows-1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::O;
@@ -217,7 +217,7 @@ fn make_computer_move(
 
                 // Try to block the player's winning move
                 for col in 0..cols {
-                    for row in (0..rows-1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::X; // Temporarily simulate the player's move
@@ -233,7 +233,7 @@ fn make_computer_move(
                 // Attempt to place the computer's piece in a random column
                 for _ in 0..cols {
                     let col = rng.gen_range(0..cols);
-                    for row in (0..rows - 1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
                             new_board[col][row] = computer_cell;
