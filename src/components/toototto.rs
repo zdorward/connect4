@@ -81,16 +81,18 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             <div class="board-toot-otto">
                 { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_choice.clone(), game_state.clone(), game_difficulty.clone(), player_t_count.clone(), player_o_count.clone(), bot_t_count.clone(), bot_o_count.clone())) }
             </div>
-            <p>
-                {
-                    match *game_state {
-                        GameState::WonBy(Player::Human) => "You win!".to_string(),
-                        GameState::WonBy(Player::Bot) => "Bot wins!".to_string(),
-                        GameState::Draw => "Draw!".to_string(),
-                        _ => "".to_string(),
+            <div class="h-8 flex items-center">
+                <p class="font-bold">
+                    {
+                        match *game_state {
+                            GameState::WonBy(Player::Human) => "You win!".to_string(),
+                            GameState::WonBy(Player::Bot) => "Bot wins!".to_string(),
+                            GameState::Draw => "Draw!".to_string(),
+                            _ => "".to_string(),
+                        }
                     }
-                }
-            </p>
+                </p>
+            </div>
         </>
     }
 }
@@ -120,14 +122,14 @@ fn create_column(
                     new_board = updated_board;
                     let win_state = check_for_win(&new_board);
                     if win_state != Player::None {
-                        game_state.set(GameState::WonBy(Player::Human));
+                        game_state.set(GameState::WonBy(win_state));
                     } else {
                         // Computer's turn to play after player's move
                         if let Some(computer_board) = make_computer_move(&new_board, &game_state, &game_difficulty, &bot_t_count, &bot_o_count) {
                             new_board = computer_board;
                             let computer_win_state = check_for_win(&new_board);
                             if computer_win_state != Player::None {
-                                game_state.set(GameState::WonBy(Player::Bot));
+                                game_state.set(GameState::WonBy(computer_win_state));
                             } else {
                                 // Check for a draw after the computer move
                                 if new_board.iter().all(|col| col[0] != Cell::Empty) {

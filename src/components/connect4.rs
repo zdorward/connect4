@@ -46,16 +46,19 @@ pub fn board(props: &BoardProps) -> Html {
             <div class="board" style={format!("grid-template-columns: repeat({},50px)", props.num_cols)}>
                 { for (0..props.num_cols).map(|x| create_column(x, props.num_rows, board.clone(), player_turn.clone(), game_state.clone(), color_blind_mode.clone(), game_difficulty.clone())) }
             </div>
-            <p class="font-bold">
-                {
-                    match *game_state {
-                        GameState::WonBy(Cell::X) => "You win!".to_string(),
-                        GameState::WonBy(Cell::O) => "Bot wins!".to_string(),
-                        GameState::Draw => "Draw!".to_string(),
-                        _ => "".to_string(),
+            <div class="h-8 flex items-center">
+                <p class="font-bold">
+                    {
+                        match *game_state {
+                            GameState::WonBy(Cell::X) => "You win!".to_string(),
+                            GameState::WonBy(Cell::O) => "Bot wins!".to_string(),
+                            GameState::Draw => "Draw!".to_string(),
+                            _ => "".to_string(),
+                        }
                     }
-                }
-            </p>
+                </p>
+            </div>
+
         </>
     }
 }

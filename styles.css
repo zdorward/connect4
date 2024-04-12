@@ -16,7 +16,7 @@ body {
   padding: 12px;
   background-color: rgb(59 130 246);
   border: 1px solid black;
-  margin: 30px;
+  margin-top: 32px;
 }
 
 .board {
@@ -24,7 +24,7 @@ body {
   padding: 12px;
   background-color: rgb(59 130 246);
   border: 1px solid black;
-  margin: 20px;
+  margin-top: 32px;
 }
 
 .cell {
