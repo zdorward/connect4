@@ -24,7 +24,7 @@ body {
   padding: 12px;
   background-color: rgb(59 130 246);
   border: 1px solid black;
-  margin-top: 32px;
+  margin-top: 12px;
 }
 
 .board-color-blind {
@@ -32,7 +32,7 @@ body {
   padding: 12px;
   background-color: rgb(156, 156, 156);
   border: 1px solid black;
-  margin-top: 32px;
+  margin-top: 12px;
 }
 
 .cell {

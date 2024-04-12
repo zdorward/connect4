@@ -43,6 +43,7 @@ pub fn board(props: &BoardProps) -> Html {
             >
                 {format!("Color Blind Mode: {}", color_blind_mode.to_string())}
             </button>
+            <div class="mt-3"> {format!("You are playing with the {} discs", if *color_blind_mode == ColorBlindMode::On {"GREEN"} else {"RED"})}</div>
             <div class={format!("{}", if *color_blind_mode==ColorBlindMode::On { "board-color-blind" } else { "board" })} style={format!("grid-template-columns: repeat({},50px)", props.num_cols)}>
                 { for (0..props.num_cols).map(|x| create_column(x, props.num_rows, board.clone(), player_turn.clone(), game_state.clone(), color_blind_mode.clone(), game_difficulty.clone())) }
             </div>
