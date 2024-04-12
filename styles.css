@@ -20,10 +20,34 @@ body {
 }
 
 .cell {
-  width: 50px; /* Adjust width as needed */
-  height: 50px; /* Adjust height as needed */
-  background-color: white; /* Change cell background color */
-  border: 1px solid black; /* Add border to cells */
+  width: 50px; 
+  height: 50px; 
+  background-color: white; 
+  border: 1px solid black; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: x-large;
+  font-weight: 700;
+}
+.circlex {
+  width: 40px; 
+  height: 40px; 
+  background-color: rgb(73, 176, 240); 
+  border-radius: 50%;
+  border: 1px solid black; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: x-large;
+  font-weight: 700;
+}
+.circleo {
+  width: 40px; 
+  height: 40px; 
+  background-color: rgb(242, 194, 63); 
+  border-radius: 50%;
+  border: 1px solid black; 
   display: flex;
   justify-content: center;
   align-items: center;

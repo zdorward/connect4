@@ -153,7 +153,19 @@ fn create_column(
                 };
                 html! {
                     <div class="cell">
-                        {symbol}
+                        if symbol == "T"{
+                            <div class="circlex">
+                                {symbol}
+                            </div>
+                        }
+                        if symbol == "O"{
+                            <div class="circleo">
+                                {symbol}
+                            </div>
+                        }
+                        if symbol == ""{
+                            {symbol}
+                        }
                     </div>
                 }
             })}
