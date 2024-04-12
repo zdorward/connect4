@@ -45,7 +45,6 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
 
     html! {
         <>
-            <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Toot and Otto")}</h1>
             <div> {"You are trying to spell \"Toot\" and the bot is trying to spell \"Otto\""}</div>
             <button 
                 onclick={toggle_player_choice}
