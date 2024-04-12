@@ -10,9 +10,16 @@ enum Cell {
 }
 
 #[derive(Clone, PartialEq)] 
+enum Player {
+    Human,
+    Bot,
+    None
+}
+
+#[derive(Clone, PartialEq)] 
 enum GameState {
     Ongoing,
-    WonBy(Cell),
+    WonBy(Player),
     Draw,
 }
 
@@ -76,8 +83,8 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             <p>
                 {
                     match *game_state {
-                        GameState::WonBy(Cell::T) => "You win!".to_string(),
-                        GameState::WonBy(Cell::O) => "Bot wins!".to_string(),
+                        GameState::WonBy(Player::Human) => "You win!".to_string(),
+                        GameState::WonBy(Player::Bot) => "Bot wins!".to_string(),
                         GameState::Draw => "Draw!".to_string(),
                         _ => "".to_string(),
                     }
@@ -111,15 +118,15 @@ fn create_column(
                 if let Some(updated_board) = make_player_move(x, num_rows, &new_board, &player_choice, &player_t_count, &player_o_count) {
                     new_board = updated_board;
                     let win_state = check_for_win(&new_board);
-                    if win_state != Cell::Empty {
-                        game_state.set(GameState::WonBy(win_state));
+                    if win_state != Player::None {
+                        game_state.set(GameState::WonBy(Player::Human));
                     } else {
                         // Computer's turn to play after player's move
                         if let Some(computer_board) = make_computer_move(&new_board, &game_state, &game_difficulty, &bot_t_count, &bot_o_count) {
                             new_board = computer_board;
                             let computer_win_state = check_for_win(&new_board);
-                            if computer_win_state != Cell::Empty {
-                                game_state.set(GameState::WonBy(computer_win_state));
+                            if computer_win_state != Player::None {
+                                game_state.set(GameState::WonBy(Player::Bot));
                             } else {
                                 // Check for a draw after the computer move
                                 if new_board.iter().all(|col| col[0] != Cell::Empty) {
@@ -248,7 +255,7 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) && **bot_o_count > 0 {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::O;
-                            if let Cell::O = check_for_win(&temp_board) {
+                            if let Player::Bot = check_for_win(&temp_board) {
                                 bot_o_count.set(**bot_o_count - 1);
                                 return Some(temp_board);
                             }
@@ -263,7 +270,7 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) && **bot_t_count > 0 {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::T;
-                            if let Cell::O = check_for_win(&temp_board) {
+                            if let Player::Bot = check_for_win(&temp_board) {
                                 bot_t_count.set(**bot_t_count - 1);
                                 return Some(temp_board);
                             }
@@ -278,7 +285,7 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) && **bot_t_count > 0 {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::O; // Temporarily simulate the player's move
-                            if let Cell::T = check_for_win(&temp_board) {
+                            if let Player::Human = check_for_win(&temp_board) {
                                 temp_board[col][row] = Cell::T; // Block the player's win
                                 bot_t_count.set(**bot_t_count - 1);
                                 return Some(temp_board);
@@ -294,7 +301,7 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) && **bot_o_count > 0 {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::T; // Temporarily simulate the player's move
-                            if let Cell::T = check_for_win(&temp_board) {
+                            if let Player::Human = check_for_win(&temp_board) {
                                 temp_board[col][row] = Cell::O; // Block the player's win
                                 bot_o_count.set(**bot_o_count - 1);
                                 return Some(temp_board);
@@ -349,7 +356,7 @@ fn make_computer_move(
     None
 }
 
-fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
+fn check_for_win(board: &Vec<Vec<Cell>>) -> Player {
     let rows = board.len();
     let cols = board[0].len();
 
@@ -361,10 +368,10 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
     for y in 0..rows {
         for x in 0..cols - 3 {
             if (0..4).all(|i| board[y][x + i] == toot_sequence[i]) {
-                return Cell::T;
+                return Player::Human;
             }
             if (0..4).all(|i| board[y][x + i] == otto_sequence[i]) {
-                return Cell::O;
+                return Player::Bot;
             }
         }
     }
@@ -373,10 +380,10 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
     for x in 0..cols {
         for y in 0..rows - 3 {
             if (0..4).all(|i| board[y + i][x] == toot_sequence[i]) {
-                return Cell::T;
+                return Player::Human;
             }
             if (0..4).all(|i| board[y + i][x] == otto_sequence[i]) {
-                return Cell::O;
+                return Player::Bot;
             }
         }
     }
@@ -385,10 +392,10 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
     for y in 0..rows - 3 {
         for x in 0..cols - 3 {
             if (0..4).all(|i| board[y + i][x + i] == toot_sequence[i]) {
-                return Cell::T;
+                return Player::Human;
             }
             if (0..4).all(|i| board[y + i][x + i] == otto_sequence[i]) {
-                return Cell::O;
+                return Player::Bot;
             }
         }
     }
@@ -397,14 +404,14 @@ fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
     for y in 3..rows {
         for x in 0..cols - 3 {
             if (0..4).all(|i| board[y - i][x + i] == toot_sequence[i]) {
-                return Cell::T;
+                return Player::Human;
             }
             if (0..4).all(|i| board[y - i][x + i] == otto_sequence[i]) {
-                return Cell::O;
+                return Player::Bot;
             }
         }
     }
 
     // If no win condition is met, return Cell::Empty.
-    Cell::Empty
+    Player::None
 }
