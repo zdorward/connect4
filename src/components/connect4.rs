@@ -114,7 +114,7 @@ fn create_column(
         })
     };
     html! {
-        <div class="column" {onclick}>
+        <div class="column" {onclick} style={format!("cursor: {}", if *game_state==GameState::Ongoing { "pointer" } else { "" })}>
             { for (0..num_rows).map(|y| {
                 let cell = board[x][y].clone();
                 let symbol = match cell {
