@@ -110,9 +110,14 @@ fn create_column(
                 if *color_blind_mode {
                     html! {
                         <div class="cell">
-                            <div class="circle-white">
-                                {symbol}
-                            </div>
+                            if symbol == ""{
+                                <div class="circle-white">
+                                </div>
+                            } else {
+                                <div class="circle-grey">
+                                    {symbol}
+                                </div>
+                            }
                         </div>
                     }
                 } else {
