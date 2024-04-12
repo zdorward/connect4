@@ -231,25 +231,23 @@ fn make_computer_move(
 
                             // Handling placement based on availability of 'T's and 'O's
                             match computer_cell {
-                                Cell::T if **bot_t_count > 0 => {
-                                    // Place a 'T' if there are 'T's left
-                                    bot_t_count.set(**bot_t_count - 1);
-                                    new_board[col][row] = Cell::T;
+                                Cell::T => {
+                                    if **bot_t_count > 0 {
+                                        bot_t_count.set(**bot_t_count - 1);
+                                        new_board[col][row] = Cell::T;
+                                    } else {
+                                        bot_o_count.set(**bot_o_count - 1);
+                                        new_board[col][row] = Cell::O;
+                                    }
                                 },
-                                Cell::O if **bot_o_count > 0 => {
-                                    // Place an 'O' if there are 'O's left
-                                    bot_o_count.set(**bot_o_count - 1);
-                                    new_board[col][row] = Cell::O;
-                                },
-                                Cell::T if **bot_t_count == 0 => {
-                                    // Place an 'O' if there are no 'T's left
-                                    bot_o_count.set(**bot_o_count - 1);
-                                    new_board[col][row] = Cell::O;
-                                },
-                                Cell::O if **bot_o_count == 0 => {
-                                    // Place a 'T' if there are no 'O's left
-                                    bot_t_count.set(**bot_t_count - 1);
-                                    new_board[col][row] = Cell::T;
+                                Cell::O => {
+                                    if **bot_o_count > 0 {
+                                        bot_o_count.set(**bot_o_count - 1);
+                                        new_board[col][row] = Cell::O;
+                                    } else {
+                                        bot_t_count.set(**bot_t_count - 1);
+                                        new_board[col][row] = Cell::T;
+                                    }
                                 },
                                 _ => {} // Fallback case (though technically unreachable)
                             }
@@ -334,28 +332,27 @@ fn make_computer_move(
 
                             // Handling placement based on availability of 'T's and 'O's
                             match computer_cell {
-                                Cell::T if **bot_t_count > 0 => {
-                                    // Place a 'T' if there are 'T's left
-                                    bot_t_count.set(**bot_t_count - 1);
-                                    new_board[col][row] = Cell::T;
+                                Cell::T => {
+                                    if **bot_t_count > 0 {
+                                        bot_t_count.set(**bot_t_count - 1);
+                                        new_board[col][row] = Cell::T;
+                                    } else {
+                                        bot_o_count.set(**bot_o_count - 1);
+                                        new_board[col][row] = Cell::O;
+                                    }
                                 },
-                                Cell::O if **bot_o_count > 0 => {
-                                    // Place an 'O' if there are 'O's left
-                                    bot_o_count.set(**bot_o_count - 1);
-                                    new_board[col][row] = Cell::O;
-                                },
-                                Cell::T if **bot_t_count == 0 => {
-                                    // Place an 'O' if there are no 'T's left
-                                    bot_o_count.set(**bot_o_count - 1);
-                                    new_board[col][row] = Cell::O;
-                                },
-                                Cell::O if **bot_o_count == 0 => {
-                                    // Place a 'T' if there are no 'O's left
-                                    bot_t_count.set(**bot_t_count - 1);
-                                    new_board[col][row] = Cell::T;
+                                Cell::O => {
+                                    if **bot_o_count > 0 {
+                                        bot_o_count.set(**bot_o_count - 1);
+                                        new_board[col][row] = Cell::O;
+                                    } else {
+                                        bot_t_count.set(**bot_t_count - 1);
+                                        new_board[col][row] = Cell::T;
+                                    }
                                 },
                                 _ => {} // Fallback case (though technically unreachable)
                             }
+                            
                             
                             return Some(new_board);
                         }
