@@ -148,20 +148,20 @@ fn make_computer_move(
     if matches!(*game_state, GameState::Ongoing) {
 
         let mut rng = thread_rng();
-        let rows = board[0].len();
-        let cols = board.len();
+        let rows = board.len();
+        let cols = board[0].len();
 
         match game_difficulty {
             Difficulty::Easy => {
                 // Determine the computer's cell type based on the current player's type and game version
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
-                for _ in 0..cols {
-                    let col = rng.gen_range(0..cols);
-                    for row in (0..rows).rev() {
-                        if matches!(board[col][row], Cell::Empty) {
+                for _ in 0..rows {
+                    let row = rng.gen_range(0..rows);
+                    for col in (0..cols).rev() {
+                        if matches!(board[row][col], Cell::Empty) {
                             let mut new_board = board.clone();
-                            new_board[col][row] = computer_cell;
+                            new_board[row][col] = computer_cell;
                             return Some(new_board);
                         }
                     }
@@ -170,11 +170,11 @@ fn make_computer_move(
             },
             Difficulty::Hard => {
                 // Try to find a winning move for the computer using the letter O
-                for col in 0..cols {
-                    for row in (0..rows).rev() {
-                        if matches!(board[col][row], Cell::Empty) {
+                for row in 0..rows {
+                    for col in (0..cols).rev() {
+                        if matches!(board[row][col], Cell::Empty) {
                             let mut temp_board = board.clone();
-                            temp_board[col][row] = Cell::O;
+                            temp_board[row][col] = Cell::O;
                             if let Cell::O = check_for_win(&temp_board) {
                                 return Some(temp_board);
                             }
@@ -184,11 +184,11 @@ fn make_computer_move(
                 }
 
                 // Try to find a winning move for the computer the letter T
-                for col in 0..cols {
-                    for row in (0..rows).rev() {
-                        if matches!(board[col][row], Cell::Empty) {
+                for row in 0..rows {
+                    for col in (0..cols).rev() {
+                        if matches!(board[row][col], Cell::Empty) {
                             let mut temp_board = board.clone();
-                            temp_board[col][row] = Cell::T;
+                            temp_board[row][col] = Cell::T;
                             if let Cell::O = check_for_win(&temp_board) {
                                 return Some(temp_board);
                             }
@@ -198,13 +198,13 @@ fn make_computer_move(
                 }
 
                 // Try to block the player's winning move using a T
-                for col in 0..cols {
-                    for row in (0..rows).rev() {
-                        if matches!(board[col][row], Cell::Empty) {
+                for row in 0..rows {
+                    for col in (0..cols).rev() {
+                        if matches!(board[row][col], Cell::Empty) {
                             let mut temp_board = board.clone();
-                            temp_board[col][row] = Cell::O; // Temporarily simulate the player's move
+                            temp_board[row][col] = Cell::O; // Temporarily simulate the player's move
                             if let Cell::T = check_for_win(&temp_board) {
-                                temp_board[col][row] = Cell::T; // Block the player's win
+                                temp_board[row][col] = Cell::T; // Block the player's win
                                 return Some(temp_board);
                             }
                             break; // Move to the next column after checking the bottom-most empty cell
@@ -213,13 +213,13 @@ fn make_computer_move(
                 }
 
                 // Try to block the player's winning move using a O
-                for col in 0..cols {
-                    for row in (0..rows).rev() {
-                        if matches!(board[col][row], Cell::Empty) {
+                for row in 0..rows {
+                    for col in (0..cols).rev() {
+                        if matches!(board[row][col], Cell::Empty) {
                             let mut temp_board = board.clone();
-                            temp_board[col][row] = Cell::T; // Temporarily simulate the player's move
+                            temp_board[row][col] = Cell::T; // Temporarily simulate the player's move
                             if let Cell::T = check_for_win(&temp_board) {
-                                temp_board[col][row] = Cell::O; // Block the player's win
+                                temp_board[row][col] = Cell::O; // Block the player's win
                                 return Some(temp_board);
                             }
                             break; // Move to the next column after checking the bottom-most empty cell
@@ -229,13 +229,12 @@ fn make_computer_move(
 
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
-                // Attempt to place the computer's piece in a random column
-                for _ in 0..cols {
-                    let col = rng.gen_range(0..cols);
-                    for row in (0..rows).rev() {
-                        if matches!(board[col][row], Cell::Empty) {
+                for _ in 0..rows {
+                    let row = rng.gen_range(0..rows);
+                    for col in (0..cols).rev() {
+                        if matches!(board[row][col], Cell::Empty) {
                             let mut new_board = board.clone();
-                            new_board[col][row] = computer_cell;
+                            new_board[row][col] = computer_cell;
                             return Some(new_board);
                         }
                     }
