@@ -96,13 +96,47 @@ pub fn App() -> Html {
         </>    
     };
 
+    let connect4_rules = {
+        let app_state = app_state.clone();
+        Callback::from(move |_| {
+            app_state.set(AppState::PlayConnect4);
+        })
+    };
+
+    let toot_otto_rules = {
+        let app_state = app_state.clone();
+        Callback::from(move |_| {
+            app_state.set(AppState::PlayTootOtto);
+        })
+    };
+
     let render_game = |state: &AppState| {
         match state {
             AppState::MainMenu => html! {
                 <>
-                    <button onclick={switch_to_connect4} class="button">{ "Play Connect4" }</button>
-                    <button onclick={switch_to_toot_otto} class="button">{ "Play Toot and Otto" }</button>
-                    <button onclick={show_rules} class="button">{ "See Rules" }</button>
+                    <div class="text-5xl mt-10 mb-44"> 
+                        {"Group 5 Project 3"} 
+                    </div>
+                    <div class="main-menu">
+                        <button 
+                            onclick={switch_to_connect4} 
+                            class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            { "Play Connect4" }
+                        </button>
+                        <button 
+                            onclick={switch_to_toot_otto} 
+                            class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            { "Play Toot and Otto" }
+                        </button>
+                        <button 
+                            onclick={show_rules} 
+                            class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            { "See Rules" }
+                        </button>
+                    </div>
                 </>
             },
             AppState::PlayConnect4 => html! {
@@ -142,8 +176,8 @@ pub fn App() -> Html {
                 </>            },
             AppState::ShowRules => html! {
                 <>
-                    <Connect4Rules />
-                    <TootAndOttoRules />
+                    <Connect4Rules on_connect4_click={connect4_rules}/>
+                    <TootAndOttoRules on_toototto_click={toot_otto_rules}/>
                 </>
             }
         }
