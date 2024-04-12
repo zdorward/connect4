@@ -21,15 +21,28 @@ pub enum GameState {
 #[function_component(Connect4Board)]
 pub fn board(props: &BoardProps) -> Html {
 
-    let color_blind_mode = use_state(|| props.color_blind_mode.clone());
+    let color_blind_mode = use_state(|| ColorBlindMode::Off);
     let game_difficulty = use_state(|| props.difficulty.clone());
     let initial_turn = Cell::X;
     let board = use_state(|| vec![vec![Cell::Empty; props.num_rows]; props.num_cols]);
     let player_turn = use_state(move || initial_turn);
     let game_state = use_state(|| GameState::Ongoing);
 
+    let toggle_color_blind_mode = {
+        let color_blind_mode = color_blind_mode.clone();
+        Callback::from(move |_| {
+            color_blind_mode.set(if *color_blind_mode == ColorBlindMode::On { ColorBlindMode::Off } else { ColorBlindMode::On });
+        })
+    };
+
     html! {
         <>
+            <button
+                onclick={toggle_color_blind_mode}
+                class="mb-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+                {format!("Color Blind Mode: {}", color_blind_mode.to_string())}
+            </button>
             <div class="board" style={format!("grid-template-columns: repeat({},50px)", props.num_cols)}>
                 { for (0..props.num_cols).map(|x| create_column(x, props.num_rows, board.clone(), player_turn.clone(), game_state.clone(), color_blind_mode.clone(), game_difficulty.clone())) }
             </div>
@@ -108,29 +121,33 @@ fn create_column(
                 };
                 
                 match *color_blind_mode {
-                    ColorBlindMode::On => {
+                    ColorBlindMode::Off => {
                         html! {
                             <div class="cell">
+                                if symbol == "X"{
+                                    <div class="circle-red">
+                                    </div>
+                                }
+                                if symbol == "O"{
+                                    <div class="circle-yellow">
+                                    </div>
+                                }
                                 if symbol == ""{
                                     <div class="circle-white">
-                                    </div>
-                                } else {
-                                    <div class="circle-grey">
-                                        {symbol}
                                     </div>
                                 }
                             </div>
                         }
                     }
-                    ColorBlindMode::Off => {
+                    ColorBlindMode::On => {
                         html! {
                             <div class="cell">
                                 if symbol == "X"{
-                                    <div class="circle-blue">
+                                    <div class="circle-green-colorblind">
                                     </div>
                                 }
                                 if symbol == "O"{
-                                    <div class="circle-orange">
+                                    <div class="circle-yellow-colorblind">
                                     </div>
                                 }
                                 if symbol == ""{
