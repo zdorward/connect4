@@ -19,20 +19,18 @@ pub enum GameState {
 
 #[function_component(Connect4Board)]
 pub fn board(props: &BoardProps) -> Html {
-    let num_rows = 6;
-    let num_cols = 7;
 
     let game_difficulty = use_state(|| props.difficulty.clone());
     let initial_turn = Cell::X;
-    let board = use_state(|| vec![vec![Cell::Empty; num_rows]; num_cols]);
+    let board = use_state(|| vec![vec![Cell::Empty; props.num_rows]; props.num_cols]);
     let player_turn = use_state(move || initial_turn);
     let game_state = use_state(|| GameState::Ongoing);
 
     html! {
         <>
             <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Connect 4") }</h1>
-            <div class="board">
-                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
+            <div class="board" style={format!("grid-template-columns: repeat({},50px)", props.num_cols)}>
+                { for (0..props.num_cols).map(|x| create_column(x, props.num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
             </div>
             <p>
                 {

@@ -1,3 +1,4 @@
+use web_sys::HtmlInputElement;
 use yew::prelude::*;
 use crate::components::rules::{TootAndOttoRules, Connect4Rules};
 use crate::components::connect4::Connect4Board;
@@ -23,6 +24,28 @@ pub fn App() -> Html {
     let app_state = use_state(|| AppState::MainMenu);
     let restart_counter = use_state(|| 0); // State to trigger board restarts
     let difficulty = use_state(|| Easy); // Adding a state for the difficulty
+    let num_rows = use_state(||6); // Default 6 rows
+    let num_cols = use_state(||7); // Default 7 columns
+
+    let set_num_rows = {
+        let num_rows = num_rows.clone();
+        Callback::from(move |e: InputEvent| {
+            if let Some(input) = e.target_dyn_into::<HtmlInputElement>() {
+                // Safely parse the input value and set the number of rows, default to 4 if parsing fails
+                num_rows.set(input.value().parse::<usize>().unwrap_or(4));
+            }
+        })
+    };
+    
+    let set_num_cols = {
+        let num_cols = num_cols.clone();
+        Callback::from(move |e: InputEvent| {
+            if let Some(input) = e.target_dyn_into::<HtmlInputElement>() {
+                // Safely parse the input value and set the number of columns, default to 4 if parsing fails
+                num_cols.set(input.value().parse::<usize>().unwrap_or(4));
+            }
+        })
+    };
 
     let restart_game = {
         let restart_counter = restart_counter.clone();
@@ -87,9 +110,13 @@ pub fn App() -> Html {
             },
             AppState::PlayConnect4 => html! {
                 <>
+                    <input type="number" min="4" max="20" value={(*num_rows).to_string()} oninput={set_num_rows} />
+                    <input type="number" min="4" max="20" value={(*num_cols).to_string()} oninput={set_num_cols} />
                     <Connect4Board 
-                        key={format!("connect4-{}-{}", *restart_counter, *difficulty)} 
+                        key={format!("board-{}-{}-{}-{}", *num_rows, *num_cols, *restart_counter, (*difficulty).to_string())}
                         difficulty={(*difficulty).clone()} 
+                        num_rows={*num_rows} 
+                        num_cols={*num_cols}
                     />
                     { game_buttons }
                     <button
@@ -102,10 +129,10 @@ pub fn App() -> Html {
             },
             AppState::PlayTootOtto => html! {
                 <>
-                    <TootOttoBoard 
-                        key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
-                        difficulty={(*difficulty).clone()} 
-                    />
+                    // <TootOttoBoard 
+                    //     key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
+                    //     difficulty={(*difficulty).clone()} 
+                    // />
                     { game_buttons }
                     <button
                         onclick={switch_to_connect4}

@@ -18,9 +18,10 @@ impl fmt::Display for GameVersion {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct BoardProps {
-    pub difficulty: Difficulty
+    pub difficulty: Difficulty,
+    pub num_rows: usize,
+    pub num_cols: usize,
 }
-
 #[derive(Clone, PartialEq)]
 pub enum Difficulty {
     Easy,
