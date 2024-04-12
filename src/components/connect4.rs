@@ -14,6 +14,7 @@ pub enum Cell {
 pub enum GameState {
     Ongoing,
     WonBy(Cell),
+    Draw,
 }
 
 
@@ -36,6 +37,7 @@ pub fn board(props: &BoardProps) -> Html {
                     match *game_state {
                         GameState::WonBy(Cell::X) => "Player 1 won!".to_string(),
                         GameState::WonBy(Cell::O) => "Player 2 won!".to_string(),
+                        GameState::Draw => "Draw!".to_string(),
                         _ => "".to_string(),
                     }
                 }
@@ -78,6 +80,10 @@ fn create_column(
                                             Cell::O => Cell::X,
                                             _ => unreachable!(),
                                         }));
+                                    } else {
+                                        if computer_board.iter().all(|col| col[0] != Cell::Empty) {
+                                            game_state.set(GameState::Draw);
+                                        }
                                     }
                                     board.set(computer_board);
                                 }
