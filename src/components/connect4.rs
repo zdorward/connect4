@@ -107,17 +107,19 @@ fn create_column(
                 html! {
                     <div class="cell">
                         if symbol == "X"{
-                            <div class="circlex">
+                            <div class="circle-blue">
                                 {symbol}
                             </div>
                         }
                         if symbol == "O"{
-                            <div class="circleo">
+                            <div class="circle-orange">
                                 {symbol}
                             </div>
                         }
                         if symbol == ""{
-                            {symbol}
+                            <div class="circle-white">
+                                {symbol}
+                            </div>
                         }
                     </div>
                 }

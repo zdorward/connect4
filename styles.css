@@ -13,41 +13,60 @@ body {
   grid-template-rows: repeat(4, 50px);
   grid-template-columns: repeat(6, 50px);
   padding: 5px;
+  padding: 8px;
+  background-color: rgb(37, 88, 189);
 }
 
 .board {
   display: grid;
+  padding: 8px;
+  background-color: rgb(37, 88, 189);
 }
 
 .cell {
-  width: 50px; 
-  height: 50px; 
-  background-color: white; 
-  border: 1px solid black; 
+  width: 50px;
+  height: 50px;
+  background-color: rgb(37, 88, 189);
+  /* border: 1px solid white; */
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: x-large;
   font-weight: 700;
 }
-.circlex {
-  width: 40px; 
-  height: 40px; 
-  background-color: rgb(73, 176, 240); 
+.circle-blue {
+  width: 40px;
+  height: 40px;
+  /* background-color: rgb(73, 176, 240); */
+  background-color: rgb(177, 30, 30);
   border-radius: 50%;
-  border: 1px solid black; 
+  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: x-large;
   font-weight: 700;
 }
-.circleo {
-  width: 40px; 
-  height: 40px; 
-  background-color: rgb(242, 194, 63); 
+.circle-orange {
+  width: 40px;
+  height: 40px;
+  /* background-color: rgb(242, 194, 63); */
+  background-color: rgb(255, 255, 66);
   border-radius: 50%;
-  border: 1px solid black; 
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: x-large;
+  font-weight: 700;
+}
+
+.circle-white {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,8 +82,7 @@ body {
   gap: 20px;
 }
 
-.input{
-
+.input {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,10 +91,10 @@ body {
   width: 40px;
   border: medium solid black;
   border-radius: 10px;
-  text-align: center; 
+  text-align: center;
 }
 
-.inputdiv{
+.inputdiv {
   display: flex;
   align-items: center;
   margin-right: 10px;
