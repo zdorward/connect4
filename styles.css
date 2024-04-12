@@ -17,9 +17,6 @@ body {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(7, 50px);
-  grid-template-rows: repeat(6, 50px);
-  padding: 5px;
 }
 
 .cell {
