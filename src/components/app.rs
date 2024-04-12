@@ -88,7 +88,7 @@ pub fn App() -> Html {
                 onclick={toggle_difficulty}
                 class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-                {difficulty.to_string()}
+                {format!("Difficulty: {}", difficulty.to_string())}
             </button>
             <button
                 onclick={restart_game}
@@ -129,10 +129,12 @@ pub fn App() -> Html {
             },
             AppState::PlayTootOtto => html! {
                 <>
-                    // <TootOttoBoard 
-                    //     key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
-                    //     difficulty={(*difficulty).clone()} 
-                    // />
+                    <TootOttoBoard 
+                        key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
+                        difficulty={(*difficulty).clone()} 
+                        num_rows={*num_rows} 
+                        num_cols={*num_cols}
+                    />
                     { game_buttons }
                     <button
                         onclick={switch_to_connect4}

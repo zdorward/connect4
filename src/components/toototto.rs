@@ -50,7 +50,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
                 onclick={toggle_player_choice}
                 class="mt-4 mb-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-                { format!("Selected Piece: {} ({})", match *player_choice {
+                { format!("Selected Piece: {} ({} Remaining)", match *player_choice {
                     Cell::T => "T",
                     Cell::O => "O",
                     _ => "Error"
@@ -62,15 +62,15 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             </button>
             
             <div class="flex justify-around items-center mt-4">
-                <div class="text-center p-4 bg-gray-100 rounded-lg shadow">
-                    {format!("Bot T's left: {}", *bot_t_count)}
+                <div class="text-center p-2 mx-1 bg-gray-100 rounded-lg shadow">
+                    {format!("Bot T's remaining: {}", *bot_t_count)}
                 </div>
-                <div class="text-center p-4 bg-gray-100 rounded-lg shadow">
-                    {format!("Bot O's left: {}", *bot_o_count)}
+                <div class="text-center p-2 mx-1 bg-gray-100 rounded-lg shadow">
+                    {format!("Bot O's remaining: {}", *bot_o_count)}
                 </div>
             </div>
 
-            <div class="board">
+            <div class="board-toot-otto">
                 { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_choice.clone(), game_state.clone(), game_difficulty.clone(), player_t_count.clone(), player_o_count.clone(), bot_t_count.clone(), bot_o_count.clone())) }
             </div>
             <p>
