@@ -59,7 +59,7 @@ pub fn App() -> Html {
         })
     };
 
-    let buttons = html! {
+    let game_buttons = html! {
         <>
             <button
                 onclick={toggle_difficulty}
@@ -91,7 +91,7 @@ pub fn App() -> Html {
                         key={format!("connect4-{}-{}", *restart_counter, *difficulty)} 
                         difficulty={(*difficulty).clone()} 
                     />
-                    { buttons }
+                    { game_buttons }
                     <button
                         onclick={switch_to_toot_otto}
                         class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -106,7 +106,7 @@ pub fn App() -> Html {
                         key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
                         difficulty={(*difficulty).clone()} 
                     />
-                    { buttons }
+                    { game_buttons }
                     <button
                         onclick={switch_to_connect4}
                         class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
