@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
-use crate::components::lib::{Difficulty, BoardProps};
+use crate::components::lib::{Difficulty, BoardProps, ColorBlindMode};
 
 #[derive(Clone, PartialEq)] 
 enum Cell {
@@ -102,7 +102,7 @@ fn create_column(
     board: UseStateHandle<Vec<Vec<Cell>>>,
     player_choice: UseStateHandle<Cell>,
     game_state: UseStateHandle<GameState>,
-    color_blind_mode: UseStateHandle<bool>,
+    color_blind_mode: UseStateHandle<ColorBlindMode>,
     game_difficulty: UseStateHandle<Difficulty>,
     player_t_count: UseStateHandle<i32>,
     player_o_count: UseStateHandle<i32>,

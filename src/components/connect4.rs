@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::components::lib::{BoardProps, Difficulty};
+use crate::components::lib::{BoardProps, Difficulty, ColorBlindMode};
 
 #[derive(Clone, PartialEq)]
 pub enum Cell {
@@ -53,7 +53,7 @@ fn create_column(
     board: UseStateHandle<Vec<Vec<Cell>>>,
     player_turn: UseStateHandle<Cell>,
     game_state: UseStateHandle<GameState>,
-    color_blind_mode: UseStateHandle<bool>,
+    color_blind_mode: UseStateHandle<ColorBlindMode>,
     game_difficulty: UseStateHandle<Difficulty>
 ) -> Html {
     let onclick = {
@@ -107,35 +107,38 @@ fn create_column(
                     Cell::Empty => "",
                 };
                 
-                if *color_blind_mode {
-                    html! {
-                        <div class="cell">
-                            if symbol == ""{
-                                <div class="circle-white">
-                                </div>
-                            } else {
-                                <div class="circle-grey">
-                                    {symbol}
-                                </div>
-                            }
-                        </div>
+                match *color_blind_mode {
+                    ColorBlindMode::On => {
+                        html! {
+                            <div class="cell">
+                                if symbol == ""{
+                                    <div class="circle-white">
+                                    </div>
+                                } else {
+                                    <div class="circle-grey">
+                                        {symbol}
+                                    </div>
+                                }
+                            </div>
+                        }
                     }
-                } else {
-                    html! {
-                        <div class="cell">
-                            if symbol == "X"{
-                                <div class="circle-blue">
-                                </div>
-                            }
-                            if symbol == "O"{
-                                <div class="circle-orange">
-                                </div>
-                            }
-                            if symbol == ""{
-                                <div class="circle-white">
-                                </div>
-                            }
-                        </div>
+                    ColorBlindMode::Off => {
+                        html! {
+                            <div class="cell">
+                                if symbol == "X"{
+                                    <div class="circle-blue">
+                                    </div>
+                                }
+                                if symbol == "O"{
+                                    <div class="circle-orange">
+                                    </div>
+                                }
+                                if symbol == ""{
+                                    <div class="circle-white">
+                                    </div>
+                                }
+                            </div>
+                        }
                     }
                 }
             })}

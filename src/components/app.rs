@@ -7,6 +7,10 @@ use crate::components::lib::{
     Difficulty::Easy, 
     Difficulty::Hard
 };
+use crate::components::lib::{
+    ColorBlindMode::On, 
+    ColorBlindMode::Off
+};
 
 enum AppState {
     MainMenu,
@@ -21,6 +25,7 @@ pub fn App() -> Html {
     let app_state = use_state(|| AppState::MainMenu);
     let restart_counter = use_state(|| 0); // State to trigger board restarts
     let difficulty = use_state(|| Easy); // Adding a state for the difficulty
+    let color_blind_mode = use_state(|| Off); // Adding a state for the difficulty
     let num_rows = use_state(||6); // Default 6 rows
     let num_cols = use_state(||7); // Default 7 columns
 
@@ -55,6 +60,13 @@ pub fn App() -> Html {
         let difficulty = difficulty.clone();
         Callback::from(move |_| {
             difficulty.set(if *difficulty == Easy { Hard } else { Easy });
+        })
+    };
+
+    let toggle_color_blind_mode = {
+        let color_blind_mode = color_blind_mode.clone();
+        Callback::from(move |_| {
+            color_blind_mode.set(if *color_blind_mode == On { Off } else { On });
         })
     };
 
@@ -158,6 +170,14 @@ pub fn App() -> Html {
                 <>
                     
                     <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Connect 4") }</h1>
+
+                    <button
+                        onclick={toggle_color_blind_mode}
+                        class="mt-4 py-2 px-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        {format!("Color Blind Mode: {}", color_blind_mode.to_string())}
+                    </button>
+
                     <div class="inputdiv">
                     <div class="inputdiv">
                         <h1 class="text-4xl md:text-2xl font-bold text-center text-gray-800 my-4">{ format!("Rows") }</h1>
@@ -169,9 +189,9 @@ pub fn App() -> Html {
                     </div>
                     </div>
                     <Connect4Board 
-                        key={format!("board-{}-{}-{}-{}", *num_rows, *num_cols, *restart_counter, (*difficulty).to_string())}
+                        key={format!("board-{}-{}-{}-{}-{}", *num_rows, *num_cols, *restart_counter, (*difficulty).to_string(), (*color_blind_mode).to_string())}
                         difficulty={(*difficulty).clone()} 
-                        color_blind_mode={true}
+                        color_blind_mode={(*color_blind_mode).clone()}
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
                     />
@@ -191,7 +211,7 @@ pub fn App() -> Html {
                     <TootOttoBoard 
                         key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
                         difficulty={(*difficulty).clone()} 
-                        color_blind_mode={true}
+                        color_blind_mode={Off}
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
                     />
