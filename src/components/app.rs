@@ -157,10 +157,17 @@ pub fn App() -> Html {
             AppState::PlayConnect4 => html! {
                 <>
                     
-                    <input type="number" min="4" max="20" value={(*num_rows).to_string()} oninput={set_num_rows} />
-                    <input type="number" min="4" max="20" value={(*num_cols).to_string()} oninput={set_num_cols} />
                     <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Connect 4") }</h1>
-                    
+                    <div class="inputdiv">
+                    <div class="inputdiv">
+                        <h1 class="text-4xl md:text-2xl font-bold text-center text-gray-800 my-4">{ format!("Rows") }</h1>
+                        <input class="input" type="number" min="4" max="20" value={(*num_rows).to_string()} oninput={set_num_rows} />
+                    </div>
+                    <div class="inputdiv">
+                        <h1 class="text-4xl md:text-2xl font-bold text-center text-gray-800 my-4">{ format!("Columns") }</h1>
+                        <input class="input" type="number" min="4" max="20" value={(*num_cols).to_string()} oninput={set_num_cols} />
+                    </div>
+                    </div>
                     <Connect4Board 
                         key={format!("board-{}-{}-{}-{}", *num_rows, *num_cols, *restart_counter, (*difficulty).to_string())}
                         difficulty={(*difficulty).clone()} 
