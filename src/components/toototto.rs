@@ -13,6 +13,7 @@ enum Cell {
 enum GameState {
     Ongoing,
     WonBy(Cell),
+    Draw,
 }
 
 #[function_component(TootOttoBoard)]
@@ -78,6 +79,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
                     match *game_state {
                         GameState::WonBy(Cell::T) => "You win!".to_string(),
                         GameState::WonBy(Cell::O) => "Bot wins!".to_string(),
+                        GameState::Draw => "Draw!".to_string(),
                         _ => "".to_string(),
                     }
                 }
@@ -119,6 +121,11 @@ fn create_column(
                             let computer_win_state = check_for_win(&new_board);
                             if computer_win_state != Cell::Empty {
                                 game_state.set(GameState::WonBy(computer_win_state));
+                            } else {
+                                // Check for a draw after the computer move
+                                if new_board.iter().all(|col| col[0] != Cell::Empty) {
+                                    game_state.set(GameState::Draw);
+                                }
                             }
                         }
                     }
