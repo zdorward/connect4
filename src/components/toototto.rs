@@ -188,7 +188,7 @@ fn make_computer_move(
                     for row in (0..rows-1).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
-                            temp_board[col][row] = Cell::O;
+                            temp_board[col][row] = Cell::T;
                             if let Cell::O = check_for_win(&temp_board) {
                                 return Some(temp_board);
                             }
