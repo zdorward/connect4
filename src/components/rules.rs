@@ -41,7 +41,7 @@ pub fn toot_and_otto_rules(props: &TootOttoRuleProps) -> Html {
     html! {
         <div class="max-w-4xl mx-auto p-5 flex flex-col items-center">
             <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">{"TOOT and OTTO Rules"}</h1>
-            <p>{"TOOT and OTTO is a two-player word-building game. Players take turns placing either a 'T' or an 'O' on a grid, aiming to spell out 'TOOT' (Player 1) or 'OTTO' (Player 2). Each letter can only be used six times, and players aim to create their words vertically, horizontally, or diagonally."}</p>
+            <p>{"TOOT and OTTO is a two-player word-building game. Players take turns placing either a 'T' or an 'O' on a grid, aiming to spell out 'TOOT' (Player 1) or 'OTTO' (Player 2). Like Connect 4, the pieces fall straight down, occupying the lowest available space within the column.  Each letter can only be used six times, and players aim to create their words vertically, horizontally, or diagonally."}</p>
             <button 
                 {onclick} 
                 class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
