@@ -79,20 +79,35 @@ pub fn App() -> Html {
         })
     };
 
+    let show_rules_from_game = {
+        let app_state = app_state.clone();
+        Callback::from(move |_| {
+            app_state.set(AppState::ShowRules);
+        })
+    };
+
     let game_buttons = html! {
         <>
-            <button
-                onclick={toggle_difficulty}
-                class="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                {format!("Difficulty: {}", difficulty.to_string())}
-            </button>
-            <button
-                onclick={restart_game}
-                class="mt-4 py-2 mb-2 px-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                {"Restart Game"}
-            </button>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
+                <button
+                    onclick={toggle_difficulty}
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    {format!("Difficulty: {}", difficulty.to_string())}
+                </button>
+                <button
+                    onclick={restart_game}
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    {"Restart Game"}
+                </button>
+                <button 
+                    onclick={show_rules_from_game} 
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    { "See Rules" }
+                </button>
+            </div>
         </>    
     };
 
