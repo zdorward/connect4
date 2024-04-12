@@ -113,8 +113,8 @@ fn create_column(
 
 fn check_for_win(board: &Vec<Vec<Cell>>) -> bool {
 
-    let rows = board[0].len();
-    let cols = board.len();
+    let rows = board.len();
+    let cols = board[0].len();
 
     let win_sequences = vec![vec![Cell::X, Cell::X, Cell::X, Cell::X], vec![Cell::O, Cell::O, Cell::O, Cell::O]];
 

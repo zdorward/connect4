@@ -248,8 +248,8 @@ fn make_computer_move(
 }
 
 fn check_for_win(board: &Vec<Vec<Cell>>) -> Cell {
-    let rows = board[0].len();
-    let cols = board.len();
+    let rows = board.len();
+    let cols = board[0].len();
 
     // Define the winning sequences for each player.
     let toot_sequence = vec![Cell::T, Cell::O, Cell::O, Cell::T];
