@@ -55,7 +55,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             <div> {"You are trying to spell \"TOOT\" and the bot is trying to spell \"OTTO\""}</div>
             <button 
                 onclick={toggle_player_choice}
-                class="mt-4 mb-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                class="mt-3 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
                 { format!("Selected Piece: {} ({} Remaining)", match *player_choice {
                     Cell::T => "T",
@@ -68,7 +68,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
                 }) }
             </button>
             
-            <div class="flex justify-around items-center mt-4">
+            <div class="flex justify-around items-center mt-3 mb-3">
                 <div class="text-center p-2 mx-1 bg-gray-100 rounded-lg shadow">
                     {format!("Bot T's remaining: {}", *bot_t_count)}
                 </div>

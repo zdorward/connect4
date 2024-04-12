@@ -88,26 +88,26 @@ pub fn App() -> Html {
 
     let game_buttons = html! {
         <>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
+            // <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
                 <button
                     onclick={toggle_difficulty}
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                     {format!("Difficulty: {}", difficulty.to_string())}
                 </button>
                 <button
                     onclick={restart_game}
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                     {"Restart Game"}
                 </button>
                 <button 
                     onclick={show_rules_from_game} 
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                     { "See Rules" }
                 </button>
-            </div>
+            // </div>
         </>    
     };
 
@@ -135,13 +135,13 @@ pub fn App() -> Html {
                     <div class="main-menu">
                         <button 
                             onclick={switch_to_connect4} 
-                            class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            class="mt-3 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         >
                             { "Play Connect4" }
                         </button>
                         <button 
                             onclick={switch_to_toot_otto} 
-                            class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            class="mt-3 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-3xl text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         >
                             { "Play TOOT and OTTO" }
                         </button>
