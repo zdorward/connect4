@@ -39,7 +39,7 @@ pub fn board(props: &BoardProps) -> Html {
         <>
             <button
                 onclick={toggle_color_blind_mode}
-                class="mb-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                class="mt-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
                 {format!("Color Blind Mode: {}", color_blind_mode.to_string())}
             </button>

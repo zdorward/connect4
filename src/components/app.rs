@@ -91,7 +91,7 @@ pub fn App() -> Html {
             // <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
                 <button
                     onclick={toggle_difficulty}
-                    class="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                     {format!("Difficulty: {}", difficulty.to_string())}
                 </button>
@@ -157,15 +157,15 @@ pub fn App() -> Html {
             AppState::PlayConnect4 => html! {
                 <>
                     
-                    <h1 class="text-3xl  font-bold text-center text-gray-800 my-4">{ format!("Connect 4") }</h1>
+                    <h1 class="text-4xl  font-bold text-center text-gray-800 mt-4 mb-4">{ format!("Connect 4") }</h1>
 
                     <div class="inputdiv">
                     <div class="inputdiv">
-                        <h1 class="text-xl text-center text-gray-800 my-4">{ format!("Rows") }</h1>
+                        <h1 class="text-large text-center text-gray-800">{ format!("Rows") }</h1>
                         <input class="input" type="number" min="4" max="20" value={(*num_rows).to_string()} oninput={set_num_rows} />
                     </div>
                     <div class="inputdiv">
-                        <h1 class="text-xl text-center text-gray-800 my-4">{ format!("Columns") }</h1>
+                        <h1 class="text-large text-center text-gray-800">{ format!("Columns") }</h1>
                         <input class="input" type="number" min="4" max="20" value={(*num_cols).to_string()} oninput={set_num_cols} />
                     </div>
                     </div>
@@ -186,7 +186,7 @@ pub fn App() -> Html {
             },
             AppState::PlayTootOtto => html! {
                 <>
-                    <h1 class="text-3xl font-bold text-center text-gray-800 my-4">{ format!("TOOT and OTTO")}</h1>
+                    <h1 class="text-4xl font-bold text-center text-gray-800 my-4">{ format!("TOOT and OTTO")}</h1>
                     
                     <TootOttoBoard 
                         key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
