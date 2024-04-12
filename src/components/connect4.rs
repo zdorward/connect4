@@ -31,7 +31,7 @@ pub fn board(props: &BoardProps) -> Html {
     html! {
         <>
             <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Connect 4") }</h1>
-            <div class="board">
+            <div class="board-toot-otto">
                 { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
             </div>
             <p>
