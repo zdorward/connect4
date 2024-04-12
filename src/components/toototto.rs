@@ -39,11 +39,11 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
 
     html! {
         <>
-            <h1>{ format!("Welcome to Toot and Otto")}</h1>
+            <h1 class="text-4xl md:text-6xl font-bold text-center text-gray-800 my-8">{ format!("Toot and Otto")}</h1>
             <div> {"You are trying to spell \"Toot\" and the bot is trying to spell \"Otto\""}</div>
             <button 
                 onclick={toggle_player_choice}
-                class="mt-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                class="mt-4 mb-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
                 { format!("Selected Piece: {}", match *player_choice { Cell::T => "T", Cell::O => "O", _ => "Error" }) }
             </button>

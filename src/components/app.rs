@@ -46,13 +46,11 @@ pub fn App() -> Html {
         match version {
             Connect4 => html! {
                 <>
-                    <Connect4Rules/>
                     <Connect4Board key={format!("connect4-{}-{}", *restart_counter, (*difficulty).to_string())} difficulty={(*difficulty).clone()}/>
                 </>
             },
             TootOtto => html! {
                 <>
-                    <TootAndOttoRules/>
                     <TootOttoBoard key={format!("toototto-{}-{}", *restart_counter, (*difficulty).to_string())} difficulty={(*difficulty).clone()}/>
                 </>
             },
@@ -61,7 +59,6 @@ pub fn App() -> Html {
 
     html! {
         <>
-            <h1 class="text-5xl md:text-6xl font-bold text-center text-gray-800 my-8">{"Group 5's Project 3"}</h1>
             { render_game(&game_version) }
             <button
                 onclick={toggle_version}
