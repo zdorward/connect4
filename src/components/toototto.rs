@@ -50,16 +50,18 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
                 onclick={toggle_player_choice}
                 class="mt-4 mb-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-                { format!("Selected Piece: {}", match *player_choice { Cell::T => "T", Cell::O => "O", _ => "Error" }) }
+                { format!("Selected Piece: {} ({})", match *player_choice {
+                    Cell::T => "T",
+                    Cell::O => "O",
+                    _ => "Error"
+                }, match *player_choice {
+                    Cell::T => *player_t_count,
+                    Cell::O => *player_o_count,
+                    _ => 0 // Handling error case by showing 0
+                }) }
             </button>
             
             <div class="flex justify-around items-center mt-4">
-                <div class="text-center p-4 bg-gray-100 rounded-lg shadow">
-                    {format!("Player T's left: {}", *player_t_count)}
-                </div>
-                <div class="text-center p-4 bg-gray-100 rounded-lg shadow">
-                    {format!("Player O's left: {}", *player_o_count)}
-                </div>
                 <div class="text-center p-4 bg-gray-100 rounded-lg shadow">
                     {format!("Bot T's left: {}", *bot_t_count)}
                 </div>
@@ -202,13 +204,29 @@ fn make_computer_move(
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
 
-                            // Inside each condition where the bot places a 'T' or 'O':
-                            if matches!(computer_cell, Cell::T) && **bot_t_count > 0 {
-                                new_board[col][row] = Cell::T;
-                                bot_t_count.set(**bot_t_count - 1);
-                            } else if matches!(computer_cell, Cell::O) && **bot_o_count > 0 {
-                                new_board[col][row] = Cell::O;
-                                bot_o_count.set(**bot_o_count - 1);
+                            // Handling placement based on availability of 'T's and 'O's
+                            match computer_cell {
+                                Cell::T if **bot_t_count > 0 => {
+                                    // Place a 'T' if there are 'T's left
+                                    bot_t_count.set(**bot_t_count - 1);
+                                    new_board[col][row] = Cell::T;
+                                },
+                                Cell::O if **bot_o_count > 0 => {
+                                    // Place an 'O' if there are 'O's left
+                                    bot_o_count.set(**bot_o_count - 1);
+                                    new_board[col][row] = Cell::O;
+                                },
+                                Cell::T if **bot_t_count == 0 => {
+                                    // Place an 'O' if there are no 'T's left
+                                    bot_o_count.set(**bot_o_count - 1);
+                                    new_board[col][row] = Cell::O;
+                                },
+                                Cell::O if **bot_o_count == 0 => {
+                                    // Place a 'T' if there are no 'O's left
+                                    bot_t_count.set(**bot_t_count - 1);
+                                    new_board[col][row] = Cell::T;
+                                },
+                                _ => {} // Fallback case (though technically unreachable)
                             }
 
                             return Some(new_board);
@@ -288,13 +306,32 @@ fn make_computer_move(
                     for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
-                            if matches!(computer_cell, Cell::T) {
-                                bot_t_count.set(**bot_t_count - 1);
-                            } else {
-                                bot_o_count.set(**bot_o_count - 1);
-                            }
 
-                            new_board[col][row] = computer_cell;
+                            // Handling placement based on availability of 'T's and 'O's
+                            match computer_cell {
+                                Cell::T if **bot_t_count > 0 => {
+                                    // Place a 'T' if there are 'T's left
+                                    bot_t_count.set(**bot_t_count - 1);
+                                    new_board[col][row] = Cell::T;
+                                },
+                                Cell::O if **bot_o_count > 0 => {
+                                    // Place an 'O' if there are 'O's left
+                                    bot_o_count.set(**bot_o_count - 1);
+                                    new_board[col][row] = Cell::O;
+                                },
+                                Cell::T if **bot_t_count == 0 => {
+                                    // Place an 'O' if there are no 'T's left
+                                    bot_o_count.set(**bot_o_count - 1);
+                                    new_board[col][row] = Cell::O;
+                                },
+                                Cell::O if **bot_o_count == 0 => {
+                                    // Place a 'T' if there are no 'O's left
+                                    bot_t_count.set(**bot_t_count - 1);
+                                    new_board[col][row] = Cell::T;
+                                },
+                                _ => {} // Fallback case (though technically unreachable)
+                            }
+                            
                             return Some(new_board);
                         }
                     }
