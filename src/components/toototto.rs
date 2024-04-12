@@ -17,8 +17,8 @@ enum GameState {
 
 #[function_component(TootOttoBoard)]
 pub fn connect_4_board(props: &BoardProps) -> Html {
-    let num_rows = 6;
-    let num_cols = 7;
+    let num_rows = 4;
+    let num_cols = 6;
 
     let board = use_state(|| vec![vec![Cell::Empty; num_rows]; num_cols]);
     let player_choice = use_state(|| Cell::T); // Assuming player starts with 'T'
@@ -148,18 +148,17 @@ fn make_computer_move(
     if matches!(*game_state, GameState::Ongoing) {
 
         let mut rng = thread_rng();
-        let cols = board[0].len();
-        let rows = board.len();
+        let rows = board[0].len();
+        let cols = board.len();
 
         match game_difficulty {
             Difficulty::Easy => {
                 // Determine the computer's cell type based on the current player's type and game version
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
-                // Attempt to place the computer's piece in a random column
-                for _ in 0..cols - 1 {
+                for _ in 0..cols {
                     let col = rng.gen_range(0..cols);
-                    for row in (0..rows - 1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
                             new_board[col][row] = computer_cell;
@@ -167,11 +166,12 @@ fn make_computer_move(
                         }
                     }
                 }
+
             },
             Difficulty::Hard => {
                 // Try to find a winning move for the computer using the letter O
                 for col in 0..cols {
-                    for row in (0..rows-1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::O;
@@ -185,7 +185,7 @@ fn make_computer_move(
 
                 // Try to find a winning move for the computer the letter T
                 for col in 0..cols {
-                    for row in (0..rows-1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::T;
@@ -199,7 +199,7 @@ fn make_computer_move(
 
                 // Try to block the player's winning move using a T
                 for col in 0..cols {
-                    for row in (0..rows-1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::O; // Temporarily simulate the player's move
@@ -214,7 +214,7 @@ fn make_computer_move(
 
                 // Try to block the player's winning move using a O
                 for col in 0..cols {
-                    for row in (0..rows-1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut temp_board = board.clone();
                             temp_board[col][row] = Cell::T; // Temporarily simulate the player's move
@@ -230,9 +230,9 @@ fn make_computer_move(
                 let computer_cell = if rng.gen_bool(0.5) { Cell::T } else { Cell::O };
 
                 // Attempt to place the computer's piece in a random column
-                for _ in 0..cols - 1 {
+                for _ in 0..cols {
                     let col = rng.gen_range(0..cols);
-                    for row in (0..rows - 1).rev() {
+                    for row in (0..rows).rev() {
                         if matches!(board[col][row], Cell::Empty) {
                             let mut new_board = board.clone();
                             new_board[col][row] = computer_cell;
