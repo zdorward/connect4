@@ -4,6 +4,7 @@ use std::fmt;
 #[derive(Clone, PartialEq, Properties)]
 pub struct BoardProps {
     pub difficulty: Difficulty,
+    pub color_blind_mode: bool,
     pub num_rows: usize,
     pub num_cols: usize,
 }

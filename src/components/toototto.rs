@@ -32,6 +32,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
     let player_choice = use_state(|| Cell::T); // Assuming player starts with 'T'
     let game_state = use_state(|| GameState::Ongoing);
     let game_difficulty = use_state(|| props.difficulty.clone());
+    let color_blind_mode = use_state(|| props.color_blind_mode.clone());
 
     let player_t_count = use_state(|| 6);
     let player_o_count = use_state(|| 6);
@@ -78,7 +79,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
             </div>
 
             <div class="board-toot-otto">
-                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_choice.clone(), game_state.clone(), game_difficulty.clone(), player_t_count.clone(), player_o_count.clone(), bot_t_count.clone(), bot_o_count.clone())) }
+                { for (0..num_cols).map(|x| create_column(x, num_rows, board.clone(), player_choice.clone(), game_state.clone(), color_blind_mode.clone(), game_difficulty.clone(), player_t_count.clone(), player_o_count.clone(), bot_t_count.clone(), bot_o_count.clone())) }
             </div>
             <p>
                 {
@@ -101,6 +102,7 @@ fn create_column(
     board: UseStateHandle<Vec<Vec<Cell>>>,
     player_choice: UseStateHandle<Cell>,
     game_state: UseStateHandle<GameState>,
+    color_blind_mode: UseStateHandle<bool>,
     game_difficulty: UseStateHandle<Difficulty>,
     player_t_count: UseStateHandle<i32>,
     player_o_count: UseStateHandle<i32>,
@@ -153,21 +155,10 @@ fn create_column(
                 };
                 html! {
                     <div class="cell">
-                        if symbol == "T"{
-                            <div class="circle-blue">
-                                {symbol}
-                            </div>
-                        }
-                        if symbol == "O"{
-                            <div class="circle-orange">
-                                {symbol}
-                            </div>
-                        }
-                        if symbol == ""{
-                            <div class="circle-white">
-                                {symbol}
-                            </div>
-                        }
+                        <div class="circle-white">
+                            {symbol}
+                        </div>
+                        
                     </div>
                 }
             })}

@@ -171,6 +171,7 @@ pub fn App() -> Html {
                     <Connect4Board 
                         key={format!("board-{}-{}-{}-{}", *num_rows, *num_cols, *restart_counter, (*difficulty).to_string())}
                         difficulty={(*difficulty).clone()} 
+                        color_blind_mode={false}
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
                     />
@@ -190,6 +191,7 @@ pub fn App() -> Html {
                     <TootOttoBoard 
                         key={format!("toototto-{}-{}", *restart_counter, *difficulty)} 
                         difficulty={(*difficulty).clone()} 
+                        color_blind_mode={true}
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
                     />

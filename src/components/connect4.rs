@@ -21,6 +21,7 @@ pub enum GameState {
 #[function_component(Connect4Board)]
 pub fn board(props: &BoardProps) -> Html {
 
+    let color_blind_mode = use_state(|| props.color_blind_mode.clone());
     let game_difficulty = use_state(|| props.difficulty.clone());
     let initial_turn = Cell::X;
     let board = use_state(|| vec![vec![Cell::Empty; props.num_rows]; props.num_cols]);
@@ -30,7 +31,7 @@ pub fn board(props: &BoardProps) -> Html {
     html! {
         <>
             <div class="board" style={format!("grid-template-columns: repeat({},50px)", props.num_cols)}>
-                { for (0..props.num_cols).map(|x| create_column(x, props.num_rows, board.clone(), player_turn.clone(), game_state.clone(), game_difficulty.clone())) }
+                { for (0..props.num_cols).map(|x| create_column(x, props.num_rows, board.clone(), player_turn.clone(), game_state.clone(), color_blind_mode.clone(), game_difficulty.clone())) }
             </div>
             <p class="font-bold">
                 {
@@ -52,6 +53,7 @@ fn create_column(
     board: UseStateHandle<Vec<Vec<Cell>>>,
     player_turn: UseStateHandle<Cell>,
     game_state: UseStateHandle<GameState>,
+    color_blind_mode: UseStateHandle<bool>,
     game_difficulty: UseStateHandle<Difficulty>
 ) -> Html {
     let onclick = {
@@ -104,24 +106,32 @@ fn create_column(
                     Cell::O => "O",
                     Cell::Empty => "",
                 };
-                html! {
-                    <div class="cell">
-                        if symbol == "X"{
-                            <div class="circle-blue">
-                                {symbol}
-                            </div>
-                        }
-                        if symbol == "O"{
-                            <div class="circle-orange">
-                                {symbol}
-                            </div>
-                        }
-                        if symbol == ""{
+                
+                if *color_blind_mode {
+                    html! {
+                        <div class="cell">
                             <div class="circle-white">
                                 {symbol}
                             </div>
-                        }
-                    </div>
+                        </div>
+                    }
+                } else {
+                    html! {
+                        <div class="cell">
+                            if symbol == "X"{
+                                <div class="circle-blue">
+                                </div>
+                            }
+                            if symbol == "O"{
+                                <div class="circle-orange">
+                                </div>
+                            }
+                            if symbol == ""{
+                                <div class="circle-white">
+                                </div>
+                            }
+                        </div>
+                    }
                 }
             })}
         </div>
