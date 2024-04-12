@@ -52,7 +52,7 @@ pub fn connect_4_board(props: &BoardProps) -> Html {
 
     html! {
         <>
-            <div> {"You are trying to spell \"Toot\" and the bot is trying to spell \"Otto\""}</div>
+            <div> {"You are trying to spell \"TOOT\" and the bot is trying to spell \"OTTO\""}</div>
             <button 
                 onclick={toggle_player_choice}
                 class="mt-4 mb-4 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
