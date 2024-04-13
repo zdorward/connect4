@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
-use crate::components::lib::{Difficulty, BoardProps, ColorBlindMode};
+use crate::components::lib::{Difficulty, BoardProps};
 use rand::seq::SliceRandom; // Import the necessary trait for shuffling
 
 #[derive(Clone, PartialEq)] 
