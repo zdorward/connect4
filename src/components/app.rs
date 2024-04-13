@@ -3,6 +3,7 @@ use yew::prelude::*;
 use crate::components::rules::{TootAndOttoRules, Connect4Rules};
 use crate::components::connect4::Connect4Board;
 use crate::components::toototto::TootOttoBoard;
+use crate::components::lib::ColorBlindMode;
 use crate::components::lib::{
     Difficulty::Easy, 
     Difficulty::Hard
@@ -21,8 +22,16 @@ pub fn App() -> Html {
     let app_state = use_state(|| AppState::MainMenu);
     let restart_counter = use_state(|| 0); // State to trigger board restarts
     let difficulty = use_state(|| Easy); // Adding a state for the difficulty
+    let colorblind_mode = use_state(|| ColorBlindMode::Off); // Adding a state for the difficulty
     let num_rows = use_state(||6); // Default 6 rows
     let num_cols = use_state(||7); // Default 7 columns
+
+    let toggle_color_mode = {
+        let colorblind_mode = colorblind_mode.clone();
+        Callback::from(move |_| {
+            colorblind_mode.set(if *colorblind_mode == ColorBlindMode::Off { ColorBlindMode::On } else { ColorBlindMode::Off });
+        })
+    };
 
     let set_num_rows = {
         let num_rows = num_rows.clone();
@@ -174,6 +183,8 @@ pub fn App() -> Html {
                         difficulty={(*difficulty).clone()} 
                         num_rows={*num_rows} 
                         num_cols={*num_cols}
+                        colorblind_mode={(*colorblind_mode).clone()}
+                        on_color_blind_mode_toggle={toggle_color_mode}
                     />
                     { game_buttons }
                     <button

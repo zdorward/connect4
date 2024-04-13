@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::components::lib::{BoardProps, Difficulty, ColorBlindMode};
+use crate::components::lib::{Connect4BoardProps, Difficulty, ColorBlindMode};
 
 #[derive(Clone, PartialEq)]
 pub enum Cell {
@@ -19,9 +19,9 @@ pub enum GameState {
 
 
 #[function_component(Connect4Board)]
-pub fn board(props: &BoardProps) -> Html {
+pub fn board(props: &Connect4BoardProps) -> Html {
 
-    let color_blind_mode = use_state(|| ColorBlindMode::Off);
+    let color_blind_mode = use_state(|| props.colorblind_mode.clone());
     let game_difficulty = use_state(|| props.difficulty.clone());
     let initial_turn = Cell::X;
     let board = use_state(|| vec![vec![Cell::Empty; props.num_rows]; props.num_cols]);
@@ -30,8 +30,11 @@ pub fn board(props: &BoardProps) -> Html {
 
     let toggle_color_blind_mode = {
         let color_blind_mode = color_blind_mode.clone();
+        let on_color_blind_mode_toggle = props.on_color_blind_mode_toggle.clone(); // Assuming there's an `on_color_blind_mode_toggle` callback in `BoardProps`
+
         Callback::from(move |_| {
             color_blind_mode.set(if *color_blind_mode == ColorBlindMode::On { ColorBlindMode::Off } else { ColorBlindMode::On });
+            on_color_blind_mode_toggle.emit((*color_blind_mode).clone());
         })
     };
 
