@@ -1,11 +1,17 @@
-name: Deploy Connect 4
+name: Deploy Project3 to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  workflow_dispatch:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -13,6 +19,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Restore cache
         uses: actions/cache@v3
         with:
@@ -22,32 +29,30 @@ jobs:
             ~/.cargo/registry
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Install Trunk
-        uses: jetli/trunk-action@v0.4.0
-        with:
-          version: "latest"
-      - name: Add wasm target
-        run: rustup target add wasm32-unknown-unknown
-      - name: Create Empty Manga directory
-        run: mkdir -p ./src/assets/manga
+
+      - name: Install dependencies
+        run: |
+          cargo install trunk || true \
+            && rustup target add wasm32-unknown-unknown
+
       - name: Build the Rust WASM app and all of its assets
-        run: trunk build --public-url ${{ github.event.repository.name }} --release
+        run: trunk build --public-url "/connect4"
+
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: "./dist"
+          path: "/dist"
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
